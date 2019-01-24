@@ -76,47 +76,51 @@ function wc_remove_all_quantity_fields( $return, $product ){
 /*
  * Чтобы нельзя было добавлять любой товар если в корзине есть товар со свойством единственный на заказ
 */
-/*add_filter( 'woocommerce_add_to_cart_validation', 'woocommerce_add_cart_item_data_custom',5,1 );
-
-function woocommerce_add_cart_item_data_custom( $product_id ) {
-$product_data = wc_get_product( $product_id );
-    $cart_item_data = (array) apply_filters( 'woocommerce_add_cart_item_data', $cart_item_data, $product_id, $variation_id );
-    $cart_id        = WC()->cart->generate_cart_id( $product_id, $variation_id, $variation, $cart_item_data );
-    $cart_item_key  = WC()->cart->find_product_in_cart( $cart_id );
-
-    // Stock check - only check if we're managing stock and backorders are not allowed
-            if ( ! $product_data->is_in_stock() ) {
-                continue;
-            }
-    return false;
-}*/
 
 function so_validate_add_cart_item( $passed, $product_id ) { 
-
-	// do your validation, if not met switch $passed to false
-	
 	
 	global $woocommerce;
+	
+	$this_product = wc_get_product( $product_id );
 	
 	$cart_is_empty = true;
 	$obuchenie_in_cart = false;
 	
+	$this_product_is_obuchenie = $this_product->get_meta( 'single_in_cart' );
+	$this_product_alredy_in_cart = false;
+	
     foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
 		$cart_is_empty = false;
 		
-        $_product = $values['data'];
-
-        if ( $_product->id === $product_id ) {
+        $product_id_in_cart = $values['product_id'];
+		
+		$product_in_cart = wc_get_product( $product_id_in_cart );
+		
+		$product_is_obuchenie = $product_in_cart->get_meta( 'single_in_cart' );
+		
+		if ( $product_id_in_cart == $product_id ) {
+            $this_product_alredy_in_cart = true;
+        }  
+		
+		if ( $product_is_obuchenie ) {
             $obuchenie_in_cart = true;
         }       
     }
+	
 
-	if ( 1 != 2 ){
+	if ( (!$cart_is_empty && $obuchenie_in_cart && !$this_product_alredy_in_cart) ){
 
 		$passed = false;
 
-		$tovar = 'Обучение такое-то';
-		wc_add_notice( __('Вы не можете добавить это в корзину, т.к. у Вас в корзине уже находится товар "' . $tovar . '", а он может оформляться только отдельным заказом', 'textdomain' ), 'error' );
+		wc_add_notice( __('Вы не можете добавить это. Товар, находящейся сейчас в корзине, оформляться только отдельным заказом', 'textdomain' ), 'error' );
+		
+	}
+	
+	if ( (!$cart_is_empty && !$obuchenie_in_cart && $this_product_is_obuchenie) ){
+
+		$passed = false;
+
+		wc_add_notice( __('Вы не можете добавить это в корзину, т.к. данный товар оформляться только отдельным заказом', 'textdomain' ), 'error' );
 		
 	}
 
