@@ -1,0 +1,154 @@
+<?php
+
+// https://catapultthemes.com/add-custom-fields-woocommerce-product/
+// https://wpruse.ru/woocommerce/custom-fields-in-products/
+
+
+ 
+/**
+ * Display the custom text fields
+ * @since 1.0.0
+ */
+function kristall_create_custom_fields() {
+	global $post;
+	 
+	echo '<div class="kristall_options_group">';// Группировка полей 
+	
+	// Товар или услуга
+	 $args = array(
+	 'id' => 'is_service',
+	 'label' => __( 'Тип', 'kristall' ),
+	 'class' => 'kristall-custom-radio',
+	 'style'         => 'margin-left: 35px;',
+	 'options'       => array(
+		  '0'   => 'Товар',
+		  '1'   => 'Услуга',
+	   ),
+	 'value' => get_post_meta( $post->ID, 'is_service', true ) == '' ? '0' : get_post_meta( $post->ID, 'is_service', true ),
+	 );
+	 woocommerce_wp_radio( $args );
+		
+	// Страна-производитель	
+	 $args = array(
+	 'id' => 'country',
+	 'label' => __( 'Страна-производитель', 'kristall' ),
+	 'class' => 'kristall-custom-field',
+	 'desc_tip' => true,
+	 'description' => __( 'Вводится свободным текстом', 'kristall' ),
+	 );
+	 woocommerce_wp_text_input( $args );
+	 
+	// Единица измерения
+	 $args = array(
+	 'id' => 'unit',
+	 'label' => __( 'Единица измерения (сокращенно)', 'kristall' ),
+	 'class' => 'kristall-custom-field',
+	 );
+	 woocommerce_wp_text_input( $args );
+	 
+	 // Номер таможенной декларации
+	 $args = array(
+	 'id' => 'customs_declaration',
+	 'label' => __( 'Номер таможенной декларации', 'kristall' ),
+	 'class' => 'kristall-custom-field',
+	 );
+	 woocommerce_wp_text_input( $args );
+	  
+	 // Один в корзине
+	 $args = array(
+	 'id' => 'single_in_cart',
+	 'label' => __( 'Один в корзине', 'kristall' ),
+	 'class' => 'kristall-custom-checkbox',
+	 'value' => get_post_meta( $post->ID, 'single_in_cart', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'single_in_cart', true ),
+	 );
+	 woocommerce_wp_checkbox( $args );
+ 
+	echo '</div>';
+}
+add_action( 'woocommerce_product_options_general_product_data', 'kristall_create_custom_fields' );
+
+
+
+
+/**
+ * Save the custom fields
+ * @since 1.0.0
+ */
+function kristall_save_custom_field( $post_id ) {
+	 $product = wc_get_product( $post_id );
+	 
+	 $is_service = isset( $_POST['is_service'] ) ? $_POST['is_service'] : '';
+	 $country = isset( $_POST['country'] ) ? $_POST['country'] : '';
+	 $customs_declaration = isset( $_POST['customs_declaration'] ) ? $_POST['customs_declaration'] : '';
+	 $unit = isset( $_POST['unit'] ) ? $_POST['unit'] : '';
+	 $single_in_cart = isset( $_POST['single_in_cart'] ) ? $_POST['single_in_cart'] : '';
+	 if ($single_in_cart == 'yes' || $single_in_cart == 1){
+		 $single_in_cart = 1;
+	 }else{
+		 $single_in_cart = 0;
+	 }
+	 
+	 $product->update_meta_data( 'is_service', sanitize_text_field( $is_service ) );
+	 $product->update_meta_data( 'country', sanitize_text_field( $country ) );
+	 $product->update_meta_data( 'customs_declaration', sanitize_text_field( $customs_declaration ) );
+	 $product->update_meta_data( 'unit', sanitize_text_field( $unit ) );
+	 $product->update_meta_data( 'single_in_cart', sanitize_text_field( $single_in_cart ) );
+	 
+	 $product->save();
+}
+add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );
+
+
+
+
+/**
+ * Display custom fields on the front end
+ * @since 1.0.0
+ */
+function kristall_display_custom_field() {
+	global $post;
+	
+	 // Check for the custom field value
+	 $product = wc_get_product( $post->ID );
+	 
+	 $is_service = $product->get_meta( 'is_service' );
+	 $country = $product->get_meta( 'country' );
+	 $customs_declaration = $product->get_meta( 'customs_declaration' );
+	 $unit = $product->get_meta( 'unit' );
+	 $single_in_cart = $product->get_meta( 'single_in_cart' );
+	 
+
+		 printf(
+		 '<div class="kristall-custom-field-wrapper">Тип: %s</div>',
+		 esc_html( $is_service == 1 ? 'Услуга' : 'Товар' )
+		 );
+
+	 if( $country ) {
+		 // Only display our field if we've got a value for the field country
+		 printf(
+		 '<div class="kristall-custom-field-wrapper">Страна-производитель: %s</div>',
+		 esc_html( $country )
+		 );
+	 }
+	 if( $customs_declaration ) {
+		 // Only display our field if we've got a value for the field customs_declaration
+		 printf(
+		 '<div class="kristall-custom-field-wrapper">Номер таможенной декларации: %s</div>',
+		 esc_html( $customs_declaration )
+		 );
+	 }
+	 if( $unit ) {
+		 // Only display our field if we've got a value for the field unit
+		 printf(
+		 '<div class="kristall-custom-field-wrapper">Ед.изм.: %s</div>',
+		 esc_html( $unit )
+		 );
+	 }
+	 if( $single_in_cart ) {//== 1 || $single_in_cart == "yes") {
+		 // Only display our field if we've got a value for the field single_in_cart
+		 print(
+		 '<div class="kristall-custom-field-wrapper">Не может быть приобретен с другими товарами</div>'
+		 );
+	 }
+}
+add_action( 'woocommerce_before_add_to_cart_button', 'kristall_display_custom_field' );
