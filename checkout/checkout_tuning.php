@@ -17,3 +17,7 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
     }
 
 }
+
+
+//подключаем css для скрытия #payment.woocommerce-checkout-payment
+    надо подключить css
