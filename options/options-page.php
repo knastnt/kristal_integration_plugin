@@ -48,7 +48,7 @@ function plugin_settings(){
 	add_settings_field('primer_field2', 'Другая опция', 'fill_primer_field2', 'kristall_page', 'section_id_1' );*/
 	
 	
-	// Отправка корзины
+	// Раздел
 	add_settings_section( 'section_id_2', 'Отправка новых заказов в кристалл', '', 'kristall_page' ); 
 	
 	// Чекбокс отправлять корзину
@@ -56,6 +56,15 @@ function plugin_settings(){
 	
 	// URL для отправки POST
 	add_settings_field('send_new_orders_to_kristall_url', 'Адрес для отправки POST', 'fill_send_new_orders_to_kristall_url', 'kristall_page', 'section_id_2' );
+
+
+
+    // Раздел Настройка checkuot
+    add_settings_section( 'section_id_3', 'Настройка checkuot', '', 'kristall_page' );
+
+    // Чекбокс скрыть div class=woocommerce-additional-fields в checkuot
+    add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
+
 }
 
 /*## Заполняем опцию 1
@@ -94,6 +103,19 @@ function fill_send_new_orders_to_kristall_url(){
 	<?php
 }
 
+
+
+
+
+## Заполняем опцию скрыть div class=woocommerce-additional-fields в checkuot
+function fill_hide_woocommerce_additional_fields_in_checkout(){
+    $val = get_option('kristall_options_array');
+    $val = isset($val['hide_woocommerce_additional_fields_in_checkout']) ? $val['hide_woocommerce_additional_fields_in_checkout'] : 0;
+    ?>
+    <label><input type="checkbox" name="kristall_options_array[hide_woocommerce_additional_fields_in_checkout]" value="1" <?php checked( 1, $val ) ?> /> скрыть</label>
+    <?php
+}
+
 ## Очистка данных
 function sanitize_callback( $options ){ 
 	// очищаем
@@ -111,6 +133,12 @@ function sanitize_callback( $options ){
 		if( $name == 'send_new_orders_to_kristall_url' ){
 			//$val = intval( $val );
 		}
+
+
+
+        if( $name == 'hide_woocommerce_additional_fields_in_checkout' ){
+            $val = intval( $val );
+        }
 	}
 
 	//die(print_r( $options )); // Array ( [input] => aaaa [checkbox] => 1 )
