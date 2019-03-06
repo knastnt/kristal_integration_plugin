@@ -16,8 +16,19 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
         ?></div><?php
     }
 
+
+
+    //подключаем css для скрытия #payment.woocommerce-checkout-payment ul выбора способа оплаты
+    add_action( 'woocommerce_checkout_order_review', 'hiding_in_woocommerce_checkout_payment', 19 );
+
+    function hiding_in_woocommerce_checkout_payment(){
+        ?>
+        <style>
+            #payment ul{
+                display: none;
+            }
+        </style>
+        <?php
+    }
+
 }
-
-
-//подключаем css для скрытия #payment.woocommerce-checkout-payment
-    надо подключить css

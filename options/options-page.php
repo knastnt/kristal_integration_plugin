@@ -63,7 +63,7 @@ function plugin_settings(){
     add_settings_section( 'section_id_3', 'Настройка checkuot', '', 'kristall_page' );
 
     // Чекбокс скрыть div class=woocommerce-additional-fields в checkuot
-    add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
+    add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields) и скрытие выбора способа оплаты (#payment.woocommerce-checkout-payment ul)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
 
 }
 
