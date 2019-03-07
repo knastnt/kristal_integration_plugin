@@ -48,25 +48,32 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
             }
         </style>
         <?php
-        echo $content;
-        generate_kristall_redirect_content();
-        return "";
+        return $content;
     }
+}
 
 
-    //создаем и выводим логику перенаправления в кристалл
-    function generate_kristall_redirect_content(){
-        //будем оборачивать button в a с отменой действия onclick
-        //такая хрень потому что если делать через form action, то, в случае если кристалл на http,
-        //браузер спросит пользователя - уверин ли он что разрешает передачу данных на незащищенный
-        //сайт и то что их могут перехватить. в вопросе оплаты это стремно.
-        //Да, это ху*во, но кристалл покачто на http :(((
-        ?>
-        <div>
-            <a href="http://www.kristal-online.ru/api/apply_order?order_id=12345">
-                <button onlick="return false;" type="submit" class="single_add_to_cart_button button alt">Перейти в Кристалл для оплаты</button>
-            </a>
-        </div>
-        <?php
-    }
+//создаем и выводим логику перенаправления в кристалл
+//wp-content/plugins/woocommerce/templates/checkout/thankyou.php
+add_filter( 'woocommerce_thankyou_order_received_text', 'generate_kristall_redirect_content'  );
+function generate_kristall_redirect_content($content ){
+    global $wp;
+    //будем оборачивать button в a с отменой действия onclick
+    //такая хрень потому что если делать через form action, то, в случае если кристалл на http,
+    //браузер спросит пользователя - уверин ли он что разрешает передачу данных на незащищенный
+    //сайт и то что их могут перехватить. в вопросе оплаты это стремно.
+    //Да, это ху*во, но кристалл покачто на http :(((
+
+    //Генерируем ссылку
+    $link = get_option('kristall_options_array');
+    $link = isset($link['redirect_user_to_kristall_url']) ? $link['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/apply_order?order_id=%ID%';
+    $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
+    ?>
+    <div>
+        <a href="<?php echo $link; ?>">
+            <button onlick="return false;" type="submit" class="single_add_to_cart_button button alt">Перейти в Кристалл для оплаты</button>
+        </a>
+    </div>
+    <?php
+    return $content;
 }

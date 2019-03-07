@@ -65,6 +65,9 @@ function plugin_settings(){
     // Чекбокс скрыть div class=woocommerce-additional-fields в checkuot
     add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields) и скрытие выбора способа оплаты (#payment.woocommerce-checkout-payment ul)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
 
+    // URL для отправки GET и перенаправления пользователя в кристалл
+    add_settings_field('redirect_user_to_kristall_url', 'Адрес для отправки GET и перенаправления пользователя (%ID% - номер заказа)', 'fill_redirect_user_to_kristall_url', 'kristall_page', 'section_id_3' );
+
 }
 
 /*## Заполняем опцию 1
@@ -116,6 +119,17 @@ function fill_hide_woocommerce_additional_fields_in_checkout(){
     <?php
 }
 
+## Заполняем опцию Адрес для отправки GET и перенаправления пользователя
+function fill_redirect_user_to_kristall_url(){
+    $val = get_option('kristall_options_array');
+    $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/apply_order?order_id=%ID%';
+    ?>
+    <input type="text" name="kristall_options_array[redirect_user_to_kristall_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
+    <?php
+}
+
+
+
 ## Очистка данных
 function sanitize_callback( $options ){ 
 	// очищаем
@@ -131,7 +145,11 @@ function sanitize_callback( $options ){
 		}
 		
 		if( $name == 'send_new_orders_to_kristall_url' ){
-			//$val = intval( $val );
+			$val = sanitize_text_field( $val );
+		}
+
+		if( $name == 'fill_redirect_user_to_kristall_url' ){
+            $val = sanitize_text_field( $val );
 		}
 
 

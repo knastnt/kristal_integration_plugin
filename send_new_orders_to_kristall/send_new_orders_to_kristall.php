@@ -45,7 +45,8 @@ function create_invoice_for_wc_order($order_id) {
 	//$data = print_r($order, 1) . PHP_EOL;
     //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/dump.txt', $data, FILE_APPEND);
 	//$url = "https://beta.rollbox.su/reciver.php";
-	$url = get_option( 'kristall_options_array' ) ["send_new_orders_to_kristall_url"];
+    $url = get_option('kristall_options_array');
+    $url = isset($url['send_new_orders_to_kristall_url']) ? $url['send_new_orders_to_kristall_url'] : 'http://kristal-online.ru/wordpress-integration.php';
 	
 	/*wp_remote_post( $url, array(
 		'body'        => array('foo'=>'val', 'bar'=>'val'), // параметры запроса в массиве
