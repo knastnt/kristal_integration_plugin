@@ -55,8 +55,10 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
 
 //создаем и выводим логику перенаправления в кристалл
 //wp-content/plugins/woocommerce/templates/checkout/thankyou.php
-add_filter( 'woocommerce_thankyou_order_received_text', 'generate_kristall_redirect_content'  );
+add_filter( 'woocommerce_thankyou_order_received_text', 'generate_kristall_redirect_content' );
 function generate_kristall_redirect_content($content ){
+    echo $content;
+
     global $wp;
     //будем оборачивать button в a с отменой действия onclick
     //такая хрень потому что если делать через form action, то, в случае если кристалл на http,
@@ -69,11 +71,11 @@ function generate_kristall_redirect_content($content ){
     $link = isset($link['redirect_user_to_kristall_url']) ? $link['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/apply_order?order_id=%ID%';
     $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
     ?>
-    <div>
+    <div class="redirect2kristall">
+        <p>Через 10 секунд Вы будете перенаправлены в Кристалл для оплаты заказа... &nbsp;Если перенаправления не произошло, нажмите на кнопку ниже</p>
         <a href="<?php echo $link; ?>">
             <button onlick="return false;" type="submit" class="single_add_to_cart_button button alt">Перейти в Кристалл для оплаты</button>
         </a>
     </div>
     <?php
-    return $content;
 }
