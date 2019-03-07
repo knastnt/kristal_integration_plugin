@@ -31,4 +31,33 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
         <?php
     }
 
+
+
+    //подключаем css для скрытия способа оплаты в чеке, а также вызываем функцию для создания перенаправления в Кристалл
+    //wp-content/plugins/woocommerce/templates/checkout/thankyou.php
+    add_filter( 'woocommerce_thankyou_order_received_text', 'hiding_pay_method_and_change_text' );
+
+    function hiding_pay_method_and_change_text($content){
+        ?>
+        <style>
+            .woocommerce-order ul li.woocommerce-order-overview__payment-method{
+                display: none;
+            }
+            .woocommerce-order ul li.woocommerce-order-overview__total{
+                border: 0;
+            }
+        </style>
+        <?php
+        echo $content;
+        generate_kristall_redirect_content();
+        return "";
+    }
+
+
+    //создаем и выводим логику перенаправления в кристалл
+    function generate_kristall_redirect_content(){
+        ?>
+        <div>Спасибочки :)</div>
+        <?php
+    }
 }
