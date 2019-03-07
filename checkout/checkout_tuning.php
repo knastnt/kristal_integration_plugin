@@ -56,8 +56,17 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
 
     //создаем и выводим логику перенаправления в кристалл
     function generate_kristall_redirect_content(){
+        //будем оборачивать button в a с отменой действия onclick
+        //такая хрень потому что если делать через form action, то, в случае если кристалл на http,
+        //браузер спросит пользователя - уверин ли он что разрешает передачу данных на незащищенный
+        //сайт и то что их могут перехватить. в вопросе оплаты это стремно.
+        //Да, это ху*во, но кристалл покачто на http :(((
         ?>
-        <div>Спасибочки :)</div>
+        <div>
+            <a href="http://www.kristal-online.ru/api/apply_order?order_id=12345">
+                <button onlick="return false;" type="submit" class="single_add_to_cart_button button alt">Перейти в Кристалл для оплаты</button>
+            </a>
+        </div>
         <?php
     }
 }
