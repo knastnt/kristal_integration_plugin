@@ -46,6 +46,10 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
             .woocommerce-order ul li.woocommerce-order-overview__total{
                 border: 0;
             }
+
+            .woocommerce-order h2.woocommerce-column__title{
+                display: none;
+            }
         </style>
         <?php
         return $content;
