@@ -72,7 +72,22 @@ function generate_kristall_redirect_content($content ){
     $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
     ?>
     <div class="redirect2kristall">
-        <p>Через 10 секунд Вы будете перенаправлены в Кристалл для оплаты заказа... &nbsp;Если перенаправления не произошло, нажмите на кнопку ниже</p>
+        <p>Через <span id="time" style="font-weight: 700;">10</span> секунд Вы будете перенаправлены в Кристалл для оплаты заказа... &nbsp;Если перенаправления не произошло, нажмите на кнопку ниже</p>
+
+        <script type="text/javascript">
+            var i = 10;//время в сек.
+            function time(){
+                document.getElementById("time").innerHTML = i;//визуальный счетчик
+                i--;//уменьшение счетчика
+                if (i < 0) {
+                    clearInterval(myTimer);
+                    location.href = "<?php echo $link; ?>";
+                }//редирект
+            }
+            time();
+            var myTimer = setInterval(time, 1000);
+        </script>
+
         <a href="<?php echo $link; ?>">
             <button onlick="return false;" type="submit" class="single_add_to_cart_button button alt">Перейти в Кристалл для оплаты</button>
         </a>
