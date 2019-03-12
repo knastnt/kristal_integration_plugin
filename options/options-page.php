@@ -122,7 +122,7 @@ function fill_hide_woocommerce_additional_fields_in_checkout(){
 ## Заполняем опцию Адрес для отправки GET и перенаправления пользователя
 function fill_redirect_user_to_kristall_url(){
     $val = get_option('kristall_options_array');
-    $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/apply_order?order_id=%ID%';
+    $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%';
     ?>
     <input type="text" name="kristall_options_array[redirect_user_to_kristall_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
     <?php

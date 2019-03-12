@@ -72,7 +72,7 @@ function generate_kristall_redirect_content($content ){
 
     //Генерируем ссылку
     $link = get_option('kristall_options_array');
-    $link = isset($link['redirect_user_to_kristall_url']) ? $link['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/apply_order?order_id=%ID%';
+    $link = isset($link['redirect_user_to_kristall_url']) ? $link['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%';
     $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
     ?>
     <div class="redirect2kristall">
