@@ -25,5 +25,8 @@ require_once( plugin_dir_path(__FILE__ ) . '/views/validate_billing_phone_number
 // кастомные метаполя в отображении товара на странице
 require_once( plugin_dir_path(__FILE__ ) . '/views/custom-meta-fields-view/custom-meta-fields-view.php' );
 
+// скрыть товары дочерних категорий на странице родительской категории. и развернуть содерджимое Uncategirized
+require_once( plugin_dir_path(__FILE__ ) . '/views/categories_and_products/categories_and_products.php' );
+
 // кастомизация страницы оформления заказа
 require_once( plugin_dir_path(__FILE__ ) . '/checkout/checkout_tuning.php' );
