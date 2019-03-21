@@ -76,8 +76,9 @@ function woo_remove_category_products_count() {
 //Отделяем категории в отдельный ul
 add_filter( 'woocommerce_product_loop_start', function($content) {
     $lines = explode("\n", trim($content));
+    $ul_cat = str_replace("products", "products cats", $lines[0]);
     if(count($lines) > 1){
-        return $content . "</ul>" . $lines[0] . "\n";
+        return str_replace($lines[0], $ul_cat,$content) . "</ul>" . $lines[0] . "\n";
     }
     return $content;
     }, 200 );
