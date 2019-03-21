@@ -59,3 +59,8 @@ function wc_hide_selected_terms( $terms, $taxonomies, $args ) {
     return $terms;
 }
 add_filter( 'get_terms', 'wc_hide_selected_terms', 10, 3 );
+
+
+//Если непосредственно в категории нет товаров, то она не отображается совсем.
+//И пофиг если в ней есть вложенная категория с товарами. Исправлияем это
+add_filter( 'woocommerce_product_subcategories_hide_empty', function() { return false; }, 10, 1 );
