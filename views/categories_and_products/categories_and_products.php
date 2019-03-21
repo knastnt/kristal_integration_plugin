@@ -64,3 +64,11 @@ add_filter( 'get_terms', 'wc_hide_selected_terms', 10, 3 );
 //Если непосредственно в категории нет товаров, то она не отображается совсем.
 //И пофиг если в ней есть вложенная категория с товарами. Исправлияем это
 add_filter( 'woocommerce_product_subcategories_hide_empty', function() { return false; }, 10, 1 );
+
+
+//При этом неправильно считается количество товаров в категории. Удаляем цифру к чертям
+add_filter( 'woocommerce_subcategory_count_html', 'woo_remove_category_products_count' );
+
+function woo_remove_category_products_count() {
+    return;
+}
