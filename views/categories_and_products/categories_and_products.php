@@ -72,3 +72,16 @@ add_filter( 'woocommerce_subcategory_count_html', 'woo_remove_category_products_
 function woo_remove_category_products_count() {
     return;
 }
+
+//Отделяем категории в отдельный ul
+add_filter( 'woocommerce_product_loop_start', function($content) {
+    $lines = explode("\n", trim($content));
+    if(count($lines) > 1){
+        return $content . "</ul>" . $lines[0] . "\n";
+    }
+    return $content;
+    }, 200 );
+
+/*add_action( 'woocommerce_before_shop_loop_item', function() {
+    echo "<!------------------------------------------------------------->";
+    } );*/
