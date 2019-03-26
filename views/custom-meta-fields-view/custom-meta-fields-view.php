@@ -22,7 +22,8 @@ function kristall_display_custom_field() {
 	 $customs_declaration = $product->get_meta( 'customs_declaration' );
 	 $unit = $product->get_meta( 'unit' );
 	 $single_in_cart = $product->get_meta( 'single_in_cart' );
-	 
+
+	 echo "<div class=\"kristall-custom-fields-wrapper\">";
 
 		 printf(
 		 '<div class="kristall-custom-field-wrapper">Тип: %s</div>',
@@ -56,6 +57,8 @@ function kristall_display_custom_field() {
 		 '<div class="kristall-custom-field-wrapper">Не может быть приобретен с другими товарами</div>'
 		 );
 	 }
+
+    echo "</div>";
 }
 add_action( 'woocommerce_before_add_to_cart_button', 'kristall_display_custom_field' );
 
