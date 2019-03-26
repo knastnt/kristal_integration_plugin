@@ -48,9 +48,12 @@ add_action( 'woocommerce_product_query', 'custom_pre_get_posts_query' );
 function wc_hide_selected_terms( $terms, $taxonomies, $args ) {
     $new_terms = array();
     $defaultcategory = get_option( 'default_product_cat' );
-    if ( in_array( 'product_cat', $taxonomies ) ) {
+    if ( in_array( 'product_cat', $taxonomies ) && $terms != null) {
         foreach ( $terms as $key => $term ) {
-            if ( $term->term_taxonomy_id != $defaultcategory ) {
+            if( $term == null){
+                echo "!";
+            }
+            if ( !($term instanceof WP_Term) || $term->term_taxonomy_id != $defaultcategory ) {
                 $new_terms[] = $term;
             }
         }
