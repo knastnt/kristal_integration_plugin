@@ -54,7 +54,7 @@ function kristall_display_custom_field() {
 	 if( $single_in_cart ) {//== 1 || $single_in_cart == "yes") {
 		 // Only display our field if we've got a value for the field single_in_cart
 		 print(
-		 '<div class="kristall-custom-field-wrapper">Не может быть приобретен с другими товарами</div>'
+		 '<div class="kristall-custom-field-wrapper single_in_cart">Не может быть приобретен с другими товарами</div>'
 		 );
 	 }
 
