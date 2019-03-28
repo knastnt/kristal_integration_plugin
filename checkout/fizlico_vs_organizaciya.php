@@ -24,6 +24,7 @@ function custom_checkout_question_field( $checkout ) {
             'individ_predprin'    => 'ИП',
             'yur_lico'    => 'Юр.Лицо',
         ),
+        'default'         => 'fiz_lico',
     ), $checkout->get_value( 'custom_question_field' ) );
 
     woocommerce_form_field( 'custom_question_text_codice_fiscale', array(
