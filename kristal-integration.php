@@ -29,4 +29,7 @@ require_once( plugin_dir_path(__FILE__ ) . '/views/custom-meta-fields-view/custo
 require_once( plugin_dir_path(__FILE__ ) . '/views/categories_and_products/categories_and_products.php' );
 
 // кастомизация страницы оформления заказа
+//скрытие ненужных полей
 require_once( plugin_dir_path(__FILE__ ) . '/checkout/checkout_tuning.php' );
+//функция физ.лицо / организация
+require_once( plugin_dir_path(__FILE__ ) . '/checkout/fizlico_vs_organizaciya.php' );
