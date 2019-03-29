@@ -27,6 +27,10 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
             #payment ul{
                 display: none;
             }
+
+            #payment .place-order {
+                margin-top: 0;
+            }
         </style>
         <?php
     }
@@ -48,6 +52,10 @@ if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_
             }
 
             .woocommerce-order h2.woocommerce-column__title{
+                display: none;
+            }
+
+            .woocommerce-order > p:not(.woocommerce-notice) {
                 display: none;
             }
         </style>
