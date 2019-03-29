@@ -13,7 +13,7 @@ function custom_checkout_question_field( $checkout ) {
 
     echo "<div class='custom-question-field-wrapper custom-question-1'>";
 
-    echo sprintf( '<p>%s</p>', __( "Выберите: Физ.лицо или Организация" ) );
+    //echo sprintf( '<p>%s</p>', __( "Выберите: Физ.лицо или Организация" ) );
 
     woocommerce_form_field( 'custom_question_field', array(
         'type'            => 'radio',
@@ -27,26 +27,19 @@ function custom_checkout_question_field( $checkout ) {
         'default'         => 'fiz_lico',
     ), $checkout->get_value( 'custom_question_field' ) );
 
-    woocommerce_form_field( 'custom_question_text_codice_fiscale', array(
+    woocommerce_form_field( 'custom_question_text_p_inn', array(
         'type'            => 'text',
-        'label'           => 'Codice Fiscale',
+        'label'           => 'ИНН',
         'required'        => true,
-        'class'           => array('custom-question-codice-fiscale-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_codice_fiscale' ) );
+        'class'           => array('custom-question-p-inn-field', 'form-row-wide'),
+    ), $checkout->get_value( 'custom_question_text_p_inn' ) );
 
-    woocommerce_form_field( 'custom_question_text_p_iva', array(
+    woocommerce_form_field( 'custom_question_text_ogrn', array(
         'type'            => 'text',
-        'label'           => 'P.Iva',
+        'label'           => 'ОГРН',
         'required'        => true,
-        'class'           => array('custom-question-p-iva-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_p_iva' ) );
-
-    woocommerce_form_field( 'custom_question_text_ragione_sociale', array(
-        'type'            => 'text',
-        'label'           => 'Ragione sociale',
-        'required'        => true,
-        'class'           => array('custom-question-ragione-sociale-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_ragione_sociale' ) );
+        'class'           => array('custom-question-ogrn-field', 'form-row-wide'),
+    ), $checkout->get_value( 'custom_question_text_ogrn' ) );
 
     echo "</div>";
 
@@ -74,16 +67,14 @@ function custom_question_conditional_javascript() {
             $(document).ready(function() {
 
                 var questionField       = $('.custom-question-field'),
-                    codiceFiscaleField  = $('.custom-question-codice-fiscale-field'),
-                    pIvaField           = $('.custom-question-p-iva-field'),
-                    ragioneSocialeField = $('.custom-question-ragione-sociale-field ');
+                    pINNField           = $('.custom-question-p-inn-field'),
+                    ogrnField = $('.custom-question-ogrn-field ');
 
                 // Check that all fields exist
                 if(
                     !questionField.length ||
-                    !codiceFiscaleField.length ||
-                    !pIvaField.length ||
-                    !ragioneSocialeField.length
+                    !pINNField.length ||
+                    !ogrnField.length
                 ) {
                     return;
                 }
@@ -92,17 +83,14 @@ function custom_question_conditional_javascript() {
                     var selectedAnswer = questionField.find('input:checked').val();
 
                     if(selectedAnswer === 'fiz_lico') {
-                        codiceFiscaleField.show();
-                        pIvaField.hide();
-                        ragioneSocialeField.hide();
+                        pINNField.hide();
+                        ogrnField.hide();
                     } else if(selectedAnswer === 'individ_predprin' || selectedAnswer === 'yur_lico') {
-                        codiceFiscaleField.hide();
-                        pIvaField.show();
-                        ragioneSocialeField.show();
+                        pINNField.show();
+                        ogrnField.show();
                     } else {
-                        codiceFiscaleField.hide();
-                        pIvaField.hide();
-                        ragioneSocialeField.hide();
+                        pINNField.hide();
+                        ogrnField.hide();
                     }
                 }
 
@@ -132,9 +120,8 @@ if( !function_exists( 'custom_checkout_question_get_field_values' ) ) {
     function custom_checkout_question_get_field_values() {
         $fields = [
             'custom_question_field'                       => '',
-            'custom_question_text_codice_fiscale'     => '',
-            'custom_question_text_p_iva'                => '',
-            'custom_question_text_ragione_sociale'    => '',
+            'custom_question_text_p_inn'                => '',
+            'custom_question_text_ogrn'    => '',
         ];
 
         foreach( $fields as $field_name => $value ) {
@@ -162,48 +149,39 @@ function custom_checkout_question_field_validate() {
     $field_values = custom_checkout_question_get_field_values();
 
     if ( empty( $field_values['custom_question_field'] ) ) {
-        wc_add_notice( 'Please select an answer for the question.', 'error' );
-    }
-
-    ////////////////////////////////////////
-
-    if (
-        $field_values['custom_question_field'] === 'fiz_lico' &&
-        empty( $field_values['custom_question_text_codice_fiscale'] )
-    ) {
-        wc_add_notice( 'Please enter codice fiscale.', 'error' );
+        wc_add_notice( 'Выберите: Физ.лицо, ИНН или Юр.лицо', 'error' );
     }
 
     ///////////////////////////////////////
 
     if (
         $field_values['custom_question_field'] === 'individ_predprin' &&
-        empty( $field_values['custom_question_text_p_iva'] )
+        empty( $field_values['custom_question_text_p_inn'] )
     ) {
-        wc_add_notice( 'Please enter p iva.', 'error' );
+        wc_add_notice( '<b>Поле ИНН</b> является обязательным полем.', 'error' );
     }
 
     if (
         $field_values['custom_question_field'] === 'individ_predprin' &&
-        empty( $field_values['custom_question_text_ragione_sociale'] )
+        empty( $field_values['custom_question_text_ogrn'] )
     ) {
-        wc_add_notice( 'Please enter ragione sociale.', 'error' );
+        wc_add_notice( '<b>Поле ОГРН</b> является обязательным полем.', 'error' );
     }
 
     ///////////////////////////////////////
 
     if (
         $field_values['custom_question_field'] === 'yur_lico' &&
-        empty( $field_values['custom_question_text_p_iva'] )
+        empty( $field_values['custom_question_text_p_inn'] )
     ) {
-        wc_add_notice( 'Please enter p iva.', 'error' );
+        wc_add_notice( '<b>Поле ИНН</b> является обязательным полем.', 'error' );
     }
 
     if (
         $field_values['custom_question_field'] === 'yur_lico' &&
-        empty( $field_values['custom_question_text_ragione_sociale'] )
+        empty( $field_values['custom_question_text_ogrn'] )
     ) {
-        wc_add_notice( 'Please enter ragione sociale.', 'error' );
+        wc_add_notice( '<b>Поле ОГРН</b> является обязательным полем.', 'error' );
     }
 
 }
