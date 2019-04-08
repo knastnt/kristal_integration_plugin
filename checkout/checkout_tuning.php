@@ -1,6 +1,10 @@
 <?php
 
 
+
+
+
+
 // Проверяем включен ли чекбокс настроек плагина - скрыть div class=woocommerce-additional-fields в checkuot. Скрываем содержимое если надо
 if ( isset(get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_fields_in_checkout"]) && get_option( 'kristall_options_array' ) ["hide_woocommerce_additional_fields_in_checkout"] == true ) {
 
@@ -90,6 +94,33 @@ function generate_kristall_redirect_content($content ){
         <p>Через <span id="time" style="font-weight: 700;">10</span> секунд Вы будете перенаправлены в Кристалл для оплаты заказа... &nbsp;Если перенаправления не произошло, нажмите на кнопку ниже</p>
 
         <script type="text/javascript">
+
+            //Сохраняем прошлые заказы в кукисы:
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+            }
+
+            var previousorders = getCookie('previousorders');
+            if (previousorders) {
+                var orders = previousorders.split(",");
+                if ( orders.indexOf( '<?php echo $wp->query_vars['order-received']; ?>' ) != -1 ) {
+                    //alert('contains');
+
+                }else{
+                    //alert('not contains. add...');
+                    document.cookie =
+                        'previousorders=' + previousorders + ',<?php echo $wp->query_vars['order-received']; ?>; expires=Fri, 3 Aug 2050 00:00:00 UTC; path=/';
+                }
+            }else{
+                //Такого кука вообще нету
+                document.cookie =
+                    'previousorders=<?php echo $wp->query_vars['order-received']; ?>; expires=Fri, 3 Aug 2050 00:00:00 UTC; path=/';
+            }
+
+
+            //Счётчик:
             var i = 10;//время в сек.
             function time(){
                 document.getElementById("time").innerHTML = i;//визуальный счетчик
