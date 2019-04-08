@@ -1,3 +1,4 @@
-.single_order{
-    background-color: red;
+.single_order .header div,
+.single_order .details .item div{
+    display:inline-block;
 }
