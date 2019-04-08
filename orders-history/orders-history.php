@@ -9,6 +9,8 @@ function orders_cookies_history_func(){
     if( isset( $_COOKIE['previousorders'])) {
         $orderIds = explode(',', $_COOKIE['previousorders']);
 
+        $orderIds = array_reverse($orderIds);
+
         foreach ($orderIds as $orderId) {
 
             // Get an instance of the WC_Order object (same as before)
