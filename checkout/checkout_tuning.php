@@ -79,9 +79,12 @@ function generate_kristall_redirect_content($content ){
     //Да, это ху*во, но кристалл покачто на http :(((
 
     //Генерируем ссылку
-    $link = get_option('kristall_options_array');
-    $link = isset($link['redirect_user_to_kristall_url']) ? $link['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%';
+    $kristall_options_array = get_option('kristall_options_array');
+    $link = isset($kristall_options_array['redirect_user_to_kristall_url']) ? $kristall_options_array['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
     $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
+
+    $shopID = isset($kristall_options_array['shopId']) ? $kristall_options_array['shopId'] : '0';
+    $link = str_replace("%ShopID%", $shopID, $link);
     ?>
     <div class="redirect2kristall">
         <p>Через <span id="time" style="font-weight: 700;">10</span> секунд Вы будете перенаправлены в Кристалл для оплаты заказа... &nbsp;Если перенаправления не произошло, нажмите на кнопку ниже</p>

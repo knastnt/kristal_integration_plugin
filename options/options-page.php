@@ -46,9 +46,18 @@ function plugin_settings(){
 	// параметры: $id, $title, $callback, $page, $section, $args
 	add_settings_field('primer_field1', 'Название опции', 'fill_primer_field1', 'kristall_page', 'section_id_1' );
 	add_settings_field('primer_field2', 'Другая опция', 'fill_primer_field2', 'kristall_page', 'section_id_1' );*/
-	
-	
-	// Раздел
+
+
+
+    // Раздел ID магазина
+    add_settings_section( 'section_id_1', 'Идентификатор магазина', '', 'kristall_page' );
+    // ID магазина
+    add_settings_field('shopId', 'Идентификатор магазина', 'fill_shopId', 'kristall_page', 'section_id_1' );
+
+
+
+
+    // Раздел
 	add_settings_section( 'section_id_2', 'Отправка новых заказов в кристалл', '', 'kristall_page' ); 
 	
 	// Чекбокс отправлять корзину
@@ -66,7 +75,7 @@ function plugin_settings(){
     add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields) и скрытие выбора способа оплаты (#payment.woocommerce-checkout-payment ul)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
 
     // URL для отправки GET и перенаправления пользователя в кристалл
-    add_settings_field('redirect_user_to_kristall_url', 'Адрес для отправки GET и перенаправления пользователя (%ID% - номер заказа)', 'fill_redirect_user_to_kristall_url', 'kristall_page', 'section_id_3' );
+    add_settings_field('redirect_user_to_kristall_url', 'Адрес для отправки GET и перенаправления пользователя (%ID% - номер заказа; %ShopID% - Идентификатор магазина)', 'fill_redirect_user_to_kristall_url', 'kristall_page', 'section_id_3' );
 
 }
 
@@ -87,6 +96,19 @@ function fill_primer_field2(){
 	<label><input type="checkbox" name="kristall_options_array[checkbox]" value="1" <?php checked( 1, $val ) ?> /> отметить</label>
 	<?php
 }*/
+
+## Заполняем опцию ID магазина
+function fill_shopId(){
+    $val = get_option('kristall_options_array');
+    $val = isset($val['shopId']) ? $val['shopId'] : '0';
+    ?>
+    <input type="text" name="kristall_options_array[shopId]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
+    <?php
+}
+
+
+
+
 
 ## Заполняем опцию Отправлять новые заказы в кристалл
 function fill_send_new_orders_to_kristall(){
@@ -122,7 +144,7 @@ function fill_hide_woocommerce_additional_fields_in_checkout(){
 ## Заполняем опцию Адрес для отправки GET и перенаправления пользователя
 function fill_redirect_user_to_kristall_url(){
     $val = get_option('kristall_options_array');
-    $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%';
+    $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
     ?>
     <input type="text" name="kristall_options_array[redirect_user_to_kristall_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
     <?php
@@ -139,6 +161,11 @@ function sanitize_callback( $options ){
 
 		if( $name == 'checkbox' )
 			$val = intval( $val );*/
+
+        if( $name == 'shopId' ){
+            $val = intval( $val );
+        }
+
 		
 		if( $name == 'send_new_orders_to_kristall' ){
 			$val = intval( $val );
