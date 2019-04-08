@@ -2,3 +2,32 @@
 .single_order .details .item div{
     display:inline-block;
 }
+
+.single_order .header {
+    background-color: #c4f7ff;
+    padding: 10px;
+    font-size: 1.1em;
+}
+.single_order .details {
+    background-color: #e6fcff;
+    padding: 10px;
+}
+
+.single_order {
+    margin-bottom: 1em;
+}
+
+
+.single_order .details .item {
+    margin-bottom: 5px;
+}
+.single_order .details .item .ordertotal {
+    float: right;
+}
+.single_order .header .orderid {
+    margin-right: 10px;
+}
+
+.single_order .header .ordertotal {
+    float: right;
+}

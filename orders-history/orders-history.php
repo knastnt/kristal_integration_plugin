@@ -21,17 +21,18 @@ function orders_cookies_history_func(){
             <div class="single_order">
                 <div class="header">
                     <div class="orderid">Заказ № <?php echo $order->get_id(); ?> </div>
-                    <div class="orderdate">от <?php echo $order->get_date_created(); ?> </div>
+                    <div class="orderdate">от <?php echo $order->get_date_created()->date('d.m.Y g:i'); ?> </div>
                     <div class="ordertotal">На сумму: <?php echo $order->get_total() . " " . $order->get_currency(); ?> </div>
                 </div>
                 <div class="details">
                     <?php
                         $items = $order->get_items();
                         foreach ($items as $item) {
+                            //var_dump($item->get_data());
                             ?>
                             <div class="item">
                                 <div class="orderdate"><?php echo $item->get_name(); ?> </div>
-                                <div class="ordertotal"><?php echo $item->get_data()['total']; ?> </div>
+                                <div class="ordertotal"><?php echo $item->get_data()['total'] . " " . $order->get_currency() . ($item->get_data()['quantity'] == 1 ? "" : " (" . $item->get_data()['quantity'] . " шт.)"); ?> </div>
                             </div>
                             <?php
                         }
