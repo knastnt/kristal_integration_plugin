@@ -27,6 +27,13 @@ function custom_checkout_question_field( $checkout ) {
         'default'         => 'fiz_lico',
     ), $checkout->get_value( 'custom_question_field' ) );
 
+    woocommerce_form_field( 'custom_question_text_p_naimenovanie', array(
+        'type'            => 'text',
+        'label'           => 'Наименование организации',
+        'required'        => true,
+        'class'           => array('custom-question-p-naimenovanie-field', 'form-row-wide'),
+    ), $checkout->get_value( 'custom_question_text_p_naimenovanie' ) );
+
     woocommerce_form_field( 'custom_question_text_p_inn', array(
         'type'            => 'text',
         'label'           => 'ИНН',
@@ -67,12 +74,14 @@ function custom_question_conditional_javascript() {
             $(document).ready(function() {
 
                 var questionField       = $('.custom-question-field'),
+                    pNaimenovanieField           = $('.custom-question-p-naimenovanie-field'),
                     pINNField           = $('.custom-question-p-inn-field'),
                     ogrnField = $('.custom-question-ogrn-field ');
 
                 // Check that all fields exist
                 if(
                     !questionField.length ||
+                    !pNaimenovanieField.length ||
                     !pINNField.length ||
                     !ogrnField.length
                 ) {
@@ -83,12 +92,15 @@ function custom_question_conditional_javascript() {
                     var selectedAnswer = questionField.find('input:checked').val();
 
                     if(selectedAnswer === 'fiz_lico') {
+                        pNaimenovanieField.hide();
                         pINNField.hide();
                         ogrnField.hide();
                     } else if(selectedAnswer === 'individ_predprin' || selectedAnswer === 'yur_lico') {
+                        pNaimenovanieField.show();
                         pINNField.show();
                         ogrnField.show();
                     } else {
+                        pNaimenovanieField.hide();
                         pINNField.hide();
                         ogrnField.hide();
                     }
@@ -120,6 +132,7 @@ if( !function_exists( 'custom_checkout_question_get_field_values' ) ) {
     function custom_checkout_question_get_field_values() {
         $fields = [
             'custom_question_field'                       => '',
+            'custom_question_text_p_naimenovanie'                => '',
             'custom_question_text_p_inn'                => '',
             'custom_question_text_ogrn'    => '',
         ];
@@ -156,6 +169,13 @@ function custom_checkout_question_field_validate() {
 
     if (
         $field_values['custom_question_field'] === 'individ_predprin' &&
+        empty( $field_values['custom_question_text_p_naimenovanie'] )
+    ) {
+        wc_add_notice( '<b>Поле Наименование организации</b> является обязательным полем.', 'error' );
+    }
+
+    if (
+        $field_values['custom_question_field'] === 'individ_predprin' &&
         empty( $field_values['custom_question_text_p_inn'] )
     ) {
         wc_add_notice( '<b>Поле ИНН</b> является обязательным полем.', 'error' );
@@ -169,6 +189,13 @@ function custom_checkout_question_field_validate() {
     }
 
     ///////////////////////////////////////
+
+    if (
+        $field_values['custom_question_field'] === 'yur_lico' &&
+        empty( $field_values['custom_question_text_p_naimenovanie'] )
+    ) {
+        wc_add_notice( '<b>Поле Наименование организации</b> является обязательным полем.', 'error' );
+    }
 
     if (
         $field_values['custom_question_field'] === 'yur_lico' &&
