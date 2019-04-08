@@ -33,3 +33,7 @@ require_once( plugin_dir_path(__FILE__ ) . '/views/categories_and_products/categ
 require_once( plugin_dir_path(__FILE__ ) . '/checkout/checkout_tuning.php' );
 //функция физ.лицо / организация
 require_once( plugin_dir_path(__FILE__ ) . '/checkout/fizlico_vs_organizaciya.php' );
+
+
+//шорткод для отображения истории заказов из кукисов
+require_once( plugin_dir_path(__FILE__ ) . '/orders-history/orders-history.php' );
