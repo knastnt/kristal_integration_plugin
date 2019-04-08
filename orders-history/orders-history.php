@@ -21,8 +21,8 @@ function orders_cookies_history_func(){
             <div class="single_order">
                 <div class="header">
                     <div class="orderid">Заказ № <?php echo $order->get_id(); ?> </div>
-                    <div class="orderdate"><?php echo $order->get_date_created(); ?> </div>
-                    <div class="ordertotal"><?php echo $order->get_total() . " " . $order->get_currency(); ?> </div>
+                    <div class="orderdate">от <?php echo $order->get_date_created(); ?> </div>
+                    <div class="ordertotal">На сумму: <?php echo $order->get_total() . " " . $order->get_currency(); ?> </div>
                 </div>
                 <div class="details">
                     <?php
@@ -49,3 +49,13 @@ function orders_cookies_history_func(){
     echo '</div>';
 }
 add_shortcode('orders_cookies_history', 'orders_cookies_history_func');
+
+
+/**
+ * Include CSS file for MyPlugin.
+ */
+function myplugin_scripts() {
+    wp_register_style( 'orders-history',  plugin_dir_url( __FILE__ ) . 'orders-history.css' );
+    wp_enqueue_style( 'orders-history' );
+}
+add_action( 'wp_enqueue_scripts', 'myplugin_scripts' );
