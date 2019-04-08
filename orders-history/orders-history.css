@@ -1,16 +1,22 @@
-.single_order .header div,
+.single_order .orders_cookies_history_header div,
 .single_order .details .item div{
     display:inline-block;
 }
 
-.single_order .header {
+.single_order .orders_cookies_history_header {
     background-color: #c4f7ff;
     padding: 10px;
     font-size: 1.1em;
+    cursor: pointer;
+}
+.single_order .orders_cookies_history_header:hover {
+    background-color: #9bf0ff;
 }
 .single_order .details {
     background-color: #e6fcff;
-    padding: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
 }
 
 .single_order {
@@ -19,15 +25,15 @@
 
 
 .single_order .details .item {
-    margin-bottom: 5px;
+    padding: 10px;
 }
 .single_order .details .item .ordertotal {
     float: right;
 }
-.single_order .header .orderid {
+.single_order .orders_cookies_history_header .orderid {
     margin-right: 10px;
 }
 
-.single_order .header .ordertotal {
+.single_order .orders_cookies_history_header .ordertotal {
     float: right;
 }

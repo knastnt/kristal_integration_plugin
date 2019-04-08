@@ -21,7 +21,7 @@ function orders_cookies_history_func(){
             ?>
 
             <div class="single_order">
-                <div class="header">
+                <div class="orders_cookies_history_header">
                     <div class="orderid">Заказ № <?php echo $order->get_id(); ?> </div>
                     <div class="orderdate">от <?php echo $order->get_date_created()->date('d.m.Y g:i'); ?> </div>
                     <div class="ordertotal">На сумму: <?php echo $order->get_total() . " " . $order->get_currency(); ?> </div>
@@ -43,8 +43,31 @@ function orders_cookies_history_func(){
 
             </div>
 
+
+
+
+
             <?php
         }
+
+        ?>
+        <script>
+            var acc = document.getElementsByClassName("orders_cookies_history_header");
+            var i;
+
+            for (i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight){
+                        panel.style.maxHeight = null;
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + "px";
+                    }
+                });
+            }
+        </script>
+        <?php
 
     }else{
         echo "Нет сохраненной истории заказов.";
