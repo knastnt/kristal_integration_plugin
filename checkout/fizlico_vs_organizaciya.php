@@ -166,50 +166,22 @@ function custom_checkout_question_field_validate() {
     }
 
     ///////////////////////////////////////
+    if ( $field_values['custom_question_field'] === 'individ_predprin' || $field_values['custom_question_field'] === 'yur_lico' ) {
 
-    if (
-        $field_values['custom_question_field'] === 'individ_predprin' &&
-        empty( $field_values['custom_question_text_p_naimenovanie'] )
-    ) {
-        wc_add_notice( '<b>Поле Наименование организации</b> является обязательным полем.', 'error' );
+        if ( empty($field_values['custom_question_text_p_naimenovanie']) ) {
+            wc_add_notice('<b>Поле Наименование организации</b> является обязательным полем.', 'error');
+        }
+
+        if ( empty($field_values['custom_question_text_p_inn']) ) {
+            wc_add_notice('<b>Поле ИНН</b> является обязательным полем.', 'error');
+        }
+
+        if ( empty($field_values['custom_question_text_ogrn']) ) {
+            wc_add_notice('<b>Поле ОГРН</b> является обязательным полем.', 'error');
+        }
+
     }
-
-    if (
-        $field_values['custom_question_field'] === 'individ_predprin' &&
-        empty( $field_values['custom_question_text_p_inn'] )
-    ) {
-        wc_add_notice( '<b>Поле ИНН</b> является обязательным полем.', 'error' );
-    }
-
-    if (
-        $field_values['custom_question_field'] === 'individ_predprin' &&
-        empty( $field_values['custom_question_text_ogrn'] )
-    ) {
-        wc_add_notice( '<b>Поле ОГРН</b> является обязательным полем.', 'error' );
-    }
-
     ///////////////////////////////////////
-
-    if (
-        $field_values['custom_question_field'] === 'yur_lico' &&
-        empty( $field_values['custom_question_text_p_naimenovanie'] )
-    ) {
-        wc_add_notice( '<b>Поле Наименование организации</b> является обязательным полем.', 'error' );
-    }
-
-    if (
-        $field_values['custom_question_field'] === 'yur_lico' &&
-        empty( $field_values['custom_question_text_p_inn'] )
-    ) {
-        wc_add_notice( '<b>Поле ИНН</b> является обязательным полем.', 'error' );
-    }
-
-    if (
-        $field_values['custom_question_field'] === 'yur_lico' &&
-        empty( $field_values['custom_question_text_ogrn'] )
-    ) {
-        wc_add_notice( '<b>Поле ОГРН</b> является обязательным полем.', 'error' );
-    }
 
 }
 
