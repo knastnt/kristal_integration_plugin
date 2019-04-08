@@ -9,7 +9,15 @@ function orders_cookies_history_func(){
         $orderIds = explode(',', $_COOKIE['previousorders']);
 
         foreach ($orderIds as $orderId) {
-            echo $orderId;
+            
+            // Get an instance of the WC_Order object (same as before)
+            $order = wc_get_order( $orderId );
+
+            if ($order == false) continue;
+
+            echo $order->get_id() . "<br>";
+            echo $order->get_date_created();
+
         }
 
     }else{
