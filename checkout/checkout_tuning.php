@@ -97,24 +97,30 @@ function generate_kristall_redirect_content($content ){
 
             //Сохраняем прошлые заказы в кукисы:
             function getCookie(name) {
+                console.log("get cookie " + name);
                 var value = "; " + document.cookie;
                 var parts = value.split("; " + name + "=");
                 if (parts.length == 2) return parts.pop().split(";").shift();
             }
 
             var previousorders = getCookie('previousorders');
+            console.log("cookie: " + previousorders);
             if (previousorders) {
+                console.log("previousorders есть");
                 var orders = previousorders.split(",");
                 if ( orders.indexOf( '<?php echo $wp->query_vars['order-received']; ?>' ) != -1 ) {
                     //alert('contains');
+                    console.log("contains");
 
                 }else{
                     //alert('not contains. add...');
+                    console.log("not contains. add...");
                     document.cookie =
                         'previousorders=' + previousorders + ',<?php echo $wp->query_vars['order-received']; ?>; expires=Fri, 3 Aug 2050 00:00:00 UTC; path=/';
                 }
             }else{
                 //Такого кука вообще нету
+                console.log("Такого кука вообще нету");
                 document.cookie =
                     'previousorders=<?php echo $wp->query_vars['order-received']; ?>; expires=Fri, 3 Aug 2050 00:00:00 UTC; path=/';
             }
