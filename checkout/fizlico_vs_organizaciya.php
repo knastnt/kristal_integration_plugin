@@ -1,5 +1,7 @@
 <?php
 
+//Подключение класса проверки введенных данных
+require_once( plugin_dir_path(__FILE__ ) . '/../utils/datavalidation.php' );
 
 
 //https://stackoverflow.com/questions/39336970/wordpress-radio-button-checkout-woocommerce-show-hide-required-field
@@ -174,11 +176,24 @@ function custom_checkout_question_field_validate() {
 
         if ( empty($field_values['custom_question_text_p_inn']) ) {
             wc_add_notice('<b>Поле ИНН</b> является обязательным полем.', 'error');
+        }else{
+            //Проверка корректности
+            $ems = "";
+            $ecode = "";
+            DataValidation::validateInn($field_values['custom_question_text_p_inn'],$ems, $ecode);
+            if ( $ems != "") wc_add_notice($ems, 'error');
         }
 
         if ( empty($field_values['custom_question_text_ogrn']) ) {
             wc_add_notice('<b>Поле ОГРН</b> является обязательным полем.', 'error');
+        }else{
+            //Проверка корректности
+            $ems = "";
+            $ecode = "";
+            DataValidation::validateOgrn($field_values['custom_question_text_ogrn'],$ems, $ecode);
+            if ( $ems != "") wc_add_notice($ems, 'error');
         }
+
 
     }
     ///////////////////////////////////////
