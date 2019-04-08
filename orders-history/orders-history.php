@@ -9,15 +9,22 @@ function orders_cookies_history_func(){
         $orderIds = explode(',', $_COOKIE['previousorders']);
 
         foreach ($orderIds as $orderId) {
-            
+
             // Get an instance of the WC_Order object (same as before)
             $order = wc_get_order( $orderId );
 
             if ($order == false) continue;
 
             echo $order->get_id() . "<br>";
-            echo $order->get_date_created();
+            echo $order->get_date_created() . "<br>";
+            echo $order->get_total() . " " . $order->get_currency() . "<br>";
 
+            $items = $order->get_items();
+            foreach ($items as $item){
+                //var_dump($item);
+                echo $item->get_name() . "<br>";
+                echo $item->get_data()['total'] . "<br>";
+            }
         }
 
     }else{
