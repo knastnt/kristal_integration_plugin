@@ -109,3 +109,21 @@ function generate_kristall_redirect_content($content ){
     </div>
     <?php
 }
+
+
+//Переименовываем Детали оплаты во Выберите, кого Вы представляете
+function rog_billing_details( $translated_text, $text, $domain ) {
+
+    if( 'woocommerce' === $domain ) {
+
+        switch ( $translated_text ) {
+            case "Детали оплаты" :
+                $translated_text = "Выберите, кого Вы представляете";
+                break;
+        }
+
+    }
+
+    return $translated_text;
+}
+add_filter( 'gettext', 'rog_billing_details', 20, 3 );
