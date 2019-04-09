@@ -40,6 +40,18 @@ function custom_pre_get_posts_query( $query ) {
 add_action( 'woocommerce_product_query', 'custom_pre_get_posts_query' );
 
 
+/* на главной странице магазина почему-то товар с классом first отображается после остальных. это вызывает перенос одного товара вниз общей кучи.
+   так и не смог разобраться в чем причина и тупо убираю этот first и last с главной страницы
+*/
+function noFirstLastProduct( $classes, $class, $postId ) {
+    if (is_shop()) {
+        $classes = array_diff($classes, ["first", "last"]);
+    }
+    return $classes;
+}
+add_filter( 'post_class', 'noFirstLastProduct', 100, 3 );
+
+
 
 /** Скрываем uncategorized
  * https://wordpress.stackexchange.com/questions/301729/hide-uncategorized-products-from-the-shop-page
