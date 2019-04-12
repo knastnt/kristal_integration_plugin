@@ -63,17 +63,24 @@ function kristall_display_custom_field() {
 add_action( 'woocommerce_before_add_to_cart_button', 'kristall_display_custom_field' );
 
 
+
+
+
+//Михаил сказал что таперь эта фича не нужна. Кристал теперь сам будет разбираться с количеством экземпляров того или иного товара
 /*
  * Если товар Не может быть приобретен с другими товарами, то и количество его должно быть 1 по логике кристалла.
  * Поэтому меняем функцию проверки woocommerce_is_sold_individually
-*/
+*
 add_filter( 'woocommerce_is_sold_individually', 'wc_remove_all_quantity_fields', 10, 2 );
 function wc_remove_all_quantity_fields( $return, $product ){
 		 
 	 $single_in_cart = $product->get_meta( 'single_in_cart' );
 
 	return $return || $single_in_cart;
-}
+}*/
+
+
+
 
 
 /*
