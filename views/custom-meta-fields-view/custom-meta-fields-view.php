@@ -22,6 +22,7 @@ function kristall_display_custom_field() {
 	 $customs_declaration = $product->get_meta( 'customs_declaration' );
 	 $unit = $product->get_meta( 'unit' );
 	 $single_in_cart = $product->get_meta( 'single_in_cart' );
+	 $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
 
 	 echo "<div class=\"kristall-custom-fields-wrapper\">";
 
@@ -55,6 +56,12 @@ function kristall_display_custom_field() {
 		 // Only display our field if we've got a value for the field single_in_cart
 		 print(
 		 '<div class="kristall-custom-field-wrapper single_in_cart"><span>Не может быть приобретен с другими товарами</span></div>'
+		 );
+	 }
+	 if( $only_for_fiz_lico ) {
+		 // Only display our field if we've got a value for the field only_for_fiz_lico
+		 print(
+		 '<div class="kristall-custom-field-wrapper only_for_fiz_lico"><span>Может быть приобретен только физическим лицом</span></div>'
 		 );
 	 }
 
@@ -94,9 +101,9 @@ function so_validate_add_cart_item( $passed, $product_id ) {
 	$this_product = wc_get_product( $product_id );
 	
 	$cart_is_empty = true;
-	$obuchenie_in_cart = false;
+	$single_in_cart_already_in_cart = false;
 	
-	$this_product_is_obuchenie = $this_product->get_meta( 'single_in_cart' );
+	$this_product_is_single_in_cart = $this_product->get_meta( 'single_in_cart' );
 	$this_product_alredy_in_cart = false;
 	
     foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
@@ -106,19 +113,19 @@ function so_validate_add_cart_item( $passed, $product_id ) {
 		
 		$product_in_cart = wc_get_product( $product_id_in_cart );
 		
-		$product_is_obuchenie = $product_in_cart->get_meta( 'single_in_cart' );
+		$product_is_single_in_cart = $product_in_cart->get_meta( 'single_in_cart' );
 		
 		if ( $product_id_in_cart == $product_id ) {
             $this_product_alredy_in_cart = true;
         }  
 		
-		if ( $product_is_obuchenie ) {
-            $obuchenie_in_cart = true;
+		if ( $product_is_single_in_cart ) {
+            $single_in_cart_already_in_cart = true;
         }       
     }
 	
 
-	if ( (!$cart_is_empty && $obuchenie_in_cart && !$this_product_alredy_in_cart) ){
+	if ( (!$cart_is_empty && $single_in_cart_already_in_cart && !$this_product_alredy_in_cart) ){
 
 		$passed = false;
 
@@ -126,7 +133,7 @@ function so_validate_add_cart_item( $passed, $product_id ) {
 		
 	}
 	
-	if ( (!$cart_is_empty && !$obuchenie_in_cart && $this_product_is_obuchenie) ){
+	if ( (!$cart_is_empty && !$single_in_cart_already_in_cart && $this_product_is_single_in_cart) ){
 
 		$passed = false;
 

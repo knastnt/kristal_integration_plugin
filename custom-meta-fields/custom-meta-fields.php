@@ -62,6 +62,15 @@ function kristall_create_custom_fields() {
 	 'value' => get_post_meta( $post->ID, 'single_in_cart', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'single_in_cart', true ),
 	 );
 	 woocommerce_wp_checkbox( $args );
+
+	 // Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)
+	 $args = array(
+	 'id' => 'only_for_fiz_lico',
+	 'label' => __( 'Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)', 'kristall' ),
+	 'class' => 'kristall-custom-checkbox',
+	 'value' => get_post_meta( $post->ID, 'only_for_fiz_lico', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'only_for_fiz_lico', true ),
+	 );
+	 woocommerce_wp_checkbox( $args );
  
 	echo '</div>';
 }
@@ -87,13 +96,20 @@ function kristall_save_custom_field( $post_id ) {
 	 }else{
 		 $single_in_cart = 0;
 	 }
+	 $only_for_fiz_lico = isset( $_POST['only_for_fiz_lico'] ) ? $_POST['only_for_fiz_lico'] : '';
+	 if ($only_for_fiz_lico == 'yes' || $only_for_fiz_lico == 1){
+         $only_for_fiz_lico = 1;
+	 }else{
+         $only_for_fiz_lico = 0;
+	 }
 	 
 	 $product->update_meta_data( 'is_service', sanitize_text_field( $is_service ) );
 	 $product->update_meta_data( 'country', sanitize_text_field( $country ) );
 	 $product->update_meta_data( 'customs_declaration', sanitize_text_field( $customs_declaration ) );
 	 $product->update_meta_data( 'unit', sanitize_text_field( $unit ) );
 	 $product->update_meta_data( 'single_in_cart', sanitize_text_field( $single_in_cart ) );
-	 
+	 $product->update_meta_data( 'only_for_fiz_lico', sanitize_text_field( $only_for_fiz_lico ) );
+
 	 $product->save();
 }
 add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );

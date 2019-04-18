@@ -17,15 +17,15 @@ function custom_checkout_question_field( $checkout ) {
 
     //echo sprintf( '<p>%s</p>', __( "Выберите: Физ.лицо или Организация" ) );
 
-    /* Если в карзине товар $single_in_cart, то убираем ИП и Юр.*/
+    /* Если в карзине товар $only_for_fiz_lico, то убираем ИП и Юр.*/
     global $woocommerce;
-    $single_in_cart = false;
+    $only_for_fiz_lico = false;
     foreach( $woocommerce->cart->get_cart() as $cart_item ){
         $product_id = $cart_item['product_id'];
         $product = wc_get_product( $product_id );
-        $single_in_cart = $product->get_meta( 'single_in_cart' );
+        $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
     }
-    if( $single_in_cart ) {
+    if( $only_for_fiz_lico ) {
         woocommerce_form_field( 'custom_question_field', array(
             'type'            => 'radio',
             'required'        => true,
