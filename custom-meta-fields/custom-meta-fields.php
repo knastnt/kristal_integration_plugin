@@ -54,10 +54,10 @@ function kristall_create_custom_fields() {
 	 );
 	 woocommerce_wp_text_input( $args );
 	  
-	 // Один в корзине
+	 // В корзине может быть только этот товар
 	 $args = array(
 	 'id' => 'single_in_cart',
-	 'label' => __( 'Один в корзине', 'kristall' ),
+	 'label' => __( 'В корзине может быть только этот товар', 'kristall' ),
 	 'class' => 'kristall-custom-checkbox',
 	 'value' => get_post_meta( $post->ID, 'single_in_cart', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'single_in_cart', true ),
 	 );
