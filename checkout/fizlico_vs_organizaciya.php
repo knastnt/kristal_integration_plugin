@@ -17,17 +17,38 @@ function custom_checkout_question_field( $checkout ) {
 
     //echo sprintf( '<p>%s</p>', __( "Выберите: Физ.лицо или Организация" ) );
 
-    woocommerce_form_field( 'custom_question_field', array(
-        'type'            => 'radio',
-        'required'        => true,
-        'class'           => array('custom-question-field', 'form-row-wide'),
-        'options'         => array(
-            'fiz_lico'         => 'Физ.лицо',
-            'individ_predprin'    => 'ИП',
-            'yur_lico'    => 'Юр.Лицо',
-        ),
-        'default'         => 'fiz_lico',
-    ), $checkout->get_value( 'custom_question_field' ) );
+    /* Если в карзине товар $single_in_cart, то убираем ИП и Юр.*/
+    global $woocommerce;
+    $single_in_cart = false;
+    foreach( $woocommerce->cart->get_cart() as $cart_item ){
+        $product_id = $cart_item['product_id'];
+        $product = wc_get_product( $product_id );
+        $single_in_cart = $product->get_meta( 'single_in_cart' );
+    }
+    if( $single_in_cart ) {
+        woocommerce_form_field( 'custom_question_field', array(
+            'type'            => 'radio',
+            'required'        => true,
+            'class'           => array('custom-question-field', 'form-row-wide'),
+            'options'         => array(
+                'fiz_lico'         => 'Физ.лицо',
+            ),
+            'default'         => 'fiz_lico',
+        ), $checkout->get_value( 'custom_question_field' ) );
+    }else{
+        woocommerce_form_field( 'custom_question_field', array(
+            'type'            => 'radio',
+            'required'        => true,
+            'class'           => array('custom-question-field', 'form-row-wide'),
+            'options'         => array(
+                'fiz_lico'         => 'Физ.лицо',
+                'individ_predprin'    => 'ИП',
+                'yur_lico'    => 'Юр.Лицо',
+            ),
+            'default'         => 'fiz_lico',
+        ), $checkout->get_value( 'custom_question_field' ) );
+    }
+
 
     woocommerce_form_field( 'custom_question_text_p_naimenovanie', array(
         'type'            => 'text',
