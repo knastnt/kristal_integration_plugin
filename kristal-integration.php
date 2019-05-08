@@ -34,6 +34,9 @@ require_once( plugin_dir_path(__FILE__ ) . '/checkout/checkout_tuning.php' );
 //функция физ.лицо / организация
 require_once( plugin_dir_path(__FILE__ ) . '/checkout/fizlico_vs_organizaciya.php' );
 
+// добавление +/- для количества товаров в корзине и автообновление
+require_once( plugin_dir_path(__FILE__ ) . '/checkout/woocommerce_ajax_change_quantity/woocommerce_ajax_change_quantity.php' );
+
 
 //шорткод для отображения истории заказов из кукисов
 require_once( plugin_dir_path(__FILE__ ) . '/orders-history/orders-history.php' );
