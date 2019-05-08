@@ -323,7 +323,7 @@ jQuery( function( $ ) {
 			  cart_update_timer = setTimeout(function () {
 				  //alert(rlll);
 				$( '.woocommerce-cart-form :input[name="update_cart"]' ).click();
-			  }, 1500);
+			  }, 800);
 			  //$(rlll).data('timer', wait);
 		},
 		
