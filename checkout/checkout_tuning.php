@@ -164,3 +164,56 @@ function rog_billing_details( $translated_text, $text, $domain ) {
     return $translated_text;
 }
 add_filter( 'gettext', 'rog_billing_details', 20, 3 );
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///
+/// Добавляем чекбокс публичной оферты при оформлении заказа
+///
+/// нужно создать страничку с договором по адресу /contract-offer
+
+//https://businessbloomer.com/woocommerce-additional-acceptance-checkbox-checkout/
+
+/**
+ * @snippet       Add contract offer tick box at checkout
+ * @how-to        Watch tutorial @ https://businessbloomer.com/?p=19055
+ * @sourcecode    https://businessbloomer.com/?p=19854
+ * @author        Rodolfo Melogli
+ * @testedwith    WooCommerce 3.3.4
+ */
+
+add_action( 'woocommerce_review_order_before_submit', 'bbloomer_add_checkout_contract_offer', 9 );
+
+function bbloomer_add_checkout_contract_offer() {
+
+    woocommerce_form_field( 'contract_offer', array(
+        'type'          => 'checkbox',
+        'class'         => array('form-row offer'),
+        'label_class'   => array('woocommerce-form__label woocommerce-form__label-for-checkbox checkbox'),
+        'input_class'   => array('woocommerce-form__input woocommerce-form__input-checkbox input-checkbox'),
+        'required'      => true,
+        'label'         => 'Я согласен с условиями <a href="/contract-offer" target="_blank">Договора оферты</a>',
+    ));
+
+}
+
+// Show notice if customer does not tick
+
+add_action( 'woocommerce_checkout_process', 'bbloomer_not_approved_offer' );
+
+function bbloomer_not_approved_offer() {
+    if ( ! (int) isset( $_POST['contract_offer'] ) ) {
+        wc_add_notice( __( 'Для продолжения необходимо принять условия договора оферты' ), 'error' );
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
