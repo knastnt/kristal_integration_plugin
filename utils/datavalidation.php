@@ -184,7 +184,7 @@ class DataValidation {
                 $result = true;
             } else {
                 $error_code = 4;
-                $error_message = 'Неправильное контрольное число';
+                $error_message = 'ОГРНИП введен неверно';
             }
         }
         return $result;
