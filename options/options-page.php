@@ -18,7 +18,7 @@ function kristall_options_page_output(){
 		<form action="options.php" method="POST">
 			<?php
 				// скрытые защитные поля
-				settings_fields( 'option_group' );     
+				settings_fields( 'kristal_integration_option_group' );
 				
 				// Секции с настройками (опциями). (section_id_1, ...)
 				do_settings_sections( 'kristall_page' );
@@ -37,8 +37,8 @@ function kristall_options_page_output(){
  */
 add_action('admin_init', 'plugin_settings');
 function plugin_settings(){
-	// параметры: $option_group, $kristall_options_array, $sanitize_callback
-	register_setting( 'option_group', 'kristall_options_array', 'sanitize_callback' );
+	// параметры: $kristal_integration_option_group, $kristall_options_array, $sanitize_callback
+	register_setting( 'kristal_integration_option_group', 'kristall_options_array', 'sanitize_callback' );
 
 	/*// параметры: $id, $title, $callback, $page
 	add_settings_section( 'section_id_1', 'Основные настройки', '', 'kristall_page' ); 
