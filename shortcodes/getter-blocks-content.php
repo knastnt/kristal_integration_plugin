@@ -65,7 +65,7 @@ function get_kristal_trade_place_func( $atts ){
 
                             html += '</div>';
 
-                            console.log(entry);
+                            //console.log(entry);
                         }
 
                         jQuery("#kristal_trade_place").html(html);
