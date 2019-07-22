@@ -56,12 +56,26 @@ function get_kristal_trade_place_func( $atts ){
                         for (var item in data) {
                             var entry = data[item];
 
-                            html += '<div class = "block_entry">';
+                            var status = '';
+                            if (entry['status'] == 'Открыта') {
+                                status = ' open';
+                            }
+                            if (entry['status'] == 'Время ожидания истекло') {
+                                status = ' expired';
+                            }
+                            if (entry['status'] == 'Завершена') {
+                                status = ' closed';
+                            }
 
-                            html += '<div class = "head">' + entry['startTime'] + '</div>';
-                            html += '<div class = "text">' + entry['uslName'] + '</div>';
-                            html += '<div class = "text">' + entry['description'] + '</div>';
-                            html += '<div class = "text">' + entry['status'] + '</div>';
+                            html += '<div class = "block_entry' + status + '">';
+
+                                html += '<div class = "startTime_status_wrapper">';
+                                    html += '<div class = "startTime">' + entry['startTime'] + '</div>';
+                                    html += '<div class = "status' + status + '">' + entry['status'] + '</div>';
+                                html += '</div>';
+
+                                html += '<div class = "uslName">' + entry['uslName'] + '</div>';
+                                html += '<div class = "description">' + entry['description'] + '</div>';
 
                             html += '</div>';
 
@@ -172,10 +186,9 @@ add_shortcode('kristal_private_ads', 'get_kristal_private_ads_func');
 
 /**
  * Include CSS file
- *
-function myplugin_scripts() {
-    wp_register_style( 'orders-history',  plugin_dir_url( __FILE__ ) . 'orders-history.css' );
-    wp_enqueue_style( 'orders-history' );
+ */
+function getter_blocks_content_css() {
+    wp_register_style( 'getter-blocks',  plugin_dir_url( __FILE__ ) . 'getter-blocks-content.css' );
+    wp_enqueue_style( 'getter-blocks' );
 }
-add_action( 'wp_enqueue_scripts', 'myplugin_scripts' );
-*/
+add_action( 'wp_enqueue_scripts', 'getter_blocks_content_css' );

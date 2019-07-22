@@ -1,0 +1,41 @@
+#kristal_private_ads .block_entry a{
+    outline: none;
+    color: #6d6d6d;
+    transition: .5s;
+    padding: 15px 5px;
+    border-radius: 5px;
+    display: block;
+}
+
+#kristal_private_ads .block_entry:hover a{
+    color: #33b8f0;
+    background-color: #f3f7f9;
+}
+
+
+
+
+
+
+#kristal_trade_place .block_entry{
+    padding: 15px 5px;
+    border-radius: 5px;
+    transition: .5s;
+}
+#kristal_trade_place .block_entry.expired,
+#kristal_trade_place .block_entry.closed{
+    color: #b1b1b1;
+}
+#kristal_trade_place .block_entry.open:hover{
+    background-color: #f3f7f9;
+}
+#kristal_trade_place .block_entry .startTime{
+    float: left;
+}
+#kristal_trade_place .block_entry .status{
+    float: right;
+}
+#kristal_trade_place .block_entry .uslName{
+    clear: both;
+    font-size: 110%;
+}
