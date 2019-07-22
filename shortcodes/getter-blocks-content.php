@@ -3,7 +3,8 @@
 //Шорткоды заполнения блоков Торговая площадка, Вебинары, Частные объявления
 
 function get_kristal_trade_place_func(){
-
+    $kristall_options_array = get_option('kristall_options_array');
+    $apiLink = isset($kristall_options_array['kristall_api_url']) ? $kristall_options_array['kristall_api_url'] : 'https://www.kristal-online.ru/api/api.php';
 
 }
 add_shortcode('kristal_trade_place', 'get_kristal_trade_place_func');

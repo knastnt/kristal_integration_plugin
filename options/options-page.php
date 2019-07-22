@@ -58,13 +58,10 @@ function plugin_settings(){
 
 
     // Раздел
-	add_settings_section( 'section_id_2', 'Отправка новых заказов в кристалл', '', 'kristall_page' ); 
+	add_settings_section( 'section_id_2', 'API кристала', '', 'kristall_page' );
 	
-	// Чекбокс отправлять корзину
-	add_settings_field('send_new_orders_to_kristall', 'Отправлять новые заказы в кристалл', 'fill_send_new_orders_to_kristall', 'kristall_page', 'section_id_2' );
-	
-	// URL для отправки POST
-	add_settings_field('send_new_orders_to_kristall_url', 'Адрес для отправки POST', 'fill_send_new_orders_to_kristall_url', 'kristall_page', 'section_id_2' );
+	// URL API кристала
+	add_settings_field('kristall_api_url', 'Адрес API кристала', 'fill_kristall_api_url', 'kristall_page', 'section_id_2' );
 
 
 
@@ -75,7 +72,7 @@ function plugin_settings(){
     add_settings_field('hide_woocommerce_additional_fields_in_checkout', 'Скрыть контейнер Детали (woocommerce-additional-fields) и скрытие выбора способа оплаты (#payment.woocommerce-checkout-payment ul)', 'fill_hide_woocommerce_additional_fields_in_checkout', 'kristall_page', 'section_id_3' );
 
     // URL для отправки GET и перенаправления пользователя в кристалл
-    add_settings_field('redirect_user_to_kristall_url', 'Адрес для отправки GET и перенаправления пользователя (%ID% - номер заказа; %ShopID% - Идентификатор магазина)', 'fill_redirect_user_to_kristall_url', 'kristall_page', 'section_id_3' );
+    //add_settings_field('redirect_user_to_kristall_url', 'Адрес для отправки GET и перенаправления пользователя (%ID% - номер заказа; %ShopID% - Идентификатор магазина)', 'fill_redirect_user_to_kristall_url', 'kristall_page', 'section_id_3' );
 
 }
 
@@ -110,21 +107,13 @@ function fill_shopId(){
 
 
 
-## Заполняем опцию Отправлять новые заказы в кристалл
-function fill_send_new_orders_to_kristall(){
-	$val = get_option('kristall_options_array');
-	$val = isset($val['send_new_orders_to_kristall']) ? $val['send_new_orders_to_kristall'] : 0;
-	?>
-	<label><input type="checkbox" name="kristall_options_array[send_new_orders_to_kristall]" value="1" <?php checked( 1, $val ) ?> /> отправлять</label>
-	<?php
-}
 
 ## Заполняем опцию Адрес для отправки POST
-function fill_send_new_orders_to_kristall_url(){
+function fill_kristall_api_url(){
 	$val = get_option('kristall_options_array');
-	$val = isset($val['send_new_orders_to_kristall_url']) ? $val['send_new_orders_to_kristall_url'] : 'http://kristal-online.ru/wordpress-integration.php';
+	$val = isset($val['kristall_api_url']) ? $val['kristall_api_url'] : 'https://www.kristal-online.ru/api/api.php';
 	?>
-	<input type="text" name="kristall_options_array[send_new_orders_to_kristall_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
+	<input type="text" name="kristall_options_array[kristall_api_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
 	<?php
 }
 
@@ -141,14 +130,14 @@ function fill_hide_woocommerce_additional_fields_in_checkout(){
     <?php
 }
 
-## Заполняем опцию Адрес для отправки GET и перенаправления пользователя
+/*## Заполняем опцию Адрес для отправки GET и перенаправления пользователя
 function fill_redirect_user_to_kristall_url(){
     $val = get_option('kristall_options_array');
     $val = isset($val['redirect_user_to_kristall_url']) ? $val['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
     ?>
     <input type="text" name="kristall_options_array[redirect_user_to_kristall_url]" value="<?php echo esc_attr( $val ) ?>" style="width: 30%;" />
     <?php
-}
+}*/
 
 
 
@@ -167,17 +156,15 @@ function sanitize_callback( $options ){
         }
 
 		
-		if( $name == 'send_new_orders_to_kristall' ){
-			$val = intval( $val );
-		}
+
 		
-		if( $name == 'send_new_orders_to_kristall_url' ){
+		if( $name == 'kristall_api_url' ){
 			$val = sanitize_text_field( $val );
 		}
 
-		if( $name == 'fill_redirect_user_to_kristall_url' ){
+		/*if( $name == 'fill_redirect_user_to_kristall_url' ){
             $val = sanitize_text_field( $val );
-		}
+		}*/
 
 
 

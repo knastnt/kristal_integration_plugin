@@ -84,7 +84,8 @@ function generate_kristall_redirect_content($content ){
 
     //Генерируем ссылку
     $kristall_options_array = get_option('kristall_options_array');
-    $link = isset($kristall_options_array['redirect_user_to_kristall_url']) ? $kristall_options_array['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
+    //$link = isset($kristall_options_array['redirect_user_to_kristall_url']) ? $kristall_options_array['redirect_user_to_kristall_url'] : 'http://www.kristal-online.ru/api/api.php?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
+    $link = (isset($kristall_options_array['kristall_api_url']) ? $kristall_options_array['kristall_api_url'] : 'https://www.kristal-online.ru/api/api.php') . '?data=aplyOrderWc&order_id=%ID%&shopId=%ShopID%';
     $link = str_replace("%ID%", $wp->query_vars['order-received'], $link);
 
     $shopID = isset($kristall_options_array['shopId']) ? $kristall_options_array['shopId'] : '0';
