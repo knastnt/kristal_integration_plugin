@@ -5,8 +5,7 @@
 //Заказы берутся из куков браузера. Куки пишет javascript в файле wp-content/plugins/kristal_integration/checkout/checkout_tuning.php
 
 function orders_cookies_history_func(){
-    $isadmin = is_admin();
-    if (!$isadmin) {
+    ob_start();
 
         echo '<div class="orders_cookies_history">';
         if (isset($_COOKIE['previousorders'])) {
@@ -82,7 +81,8 @@ function orders_cookies_history_func(){
             echo "Нет сохраненной истории заказов.";
         }
         echo '</div>';
-    }
+
+    return ob_get_clean();
 }
 add_shortcode('orders_cookies_history', 'orders_cookies_history_func');
 

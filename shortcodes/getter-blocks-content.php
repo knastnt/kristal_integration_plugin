@@ -21,6 +21,8 @@ function extract_domain_from_url( $url )
 
 function get_kristal_trade_place_func( $atts ){
 
+    ob_start();
+
     //Адрес API кристала
     $kristalApiUrl = get_kristal_api_url();
 
@@ -80,18 +82,24 @@ function get_kristal_trade_place_func( $atts ){
     </script>
     <?php
 
+    return ob_get_clean();
+
 }
 add_shortcode('kristal_trade_place', 'get_kristal_trade_place_func');
 
 
 function get_kristal_vebinars_func( $atts ){
 
+    ob_start();
+    return ob_get_clean();
 
 }
 add_shortcode('kristal_vebinars', 'get_kristal_vebinars_func');
 
 
 function get_kristal_private_ads_func( $atts ){
+
+    ob_start();
 
     //Адрес API кристала
     $kristalApiUrl = get_kristal_api_url();
@@ -152,6 +160,8 @@ function get_kristal_private_ads_func( $atts ){
         });
     </script>
     <?php
+
+    return ob_get_clean();
 
 }
 add_shortcode('kristal_private_ads', 'get_kristal_private_ads_func');
