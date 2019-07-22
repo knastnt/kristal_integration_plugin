@@ -39,4 +39,7 @@ require_once( plugin_dir_path(__FILE__ ) . '/checkout/woocommerce_ajax_change_qu
 
 
 //шорткод для отображения истории заказов из кукисов
-require_once( plugin_dir_path(__FILE__ ) . '/orders-history/orders-history.php' );
+require_once( plugin_dir_path(__FILE__ ) . '/shortcodes/orders-history.php' );
+
+//Шорткоды заполнения блоков Торговая площадка, Вебинары, Частные объявления
+require_once( plugin_dir_path(__FILE__ ) . '/shortcodes/getter-blocks-content.php' );
