@@ -30,7 +30,16 @@ function get_kristal_private_ads_func( $atts ){
         $apiLink .= '&type=all';
     }
 
+
+    //Извлекаем адрес домена из адреса API
+    $parsed_url = parse_url($apiLink);
+    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+    $kristalHomeUrl = $scheme . $host . $port;
+
     ?>
+
     <div id="kristal_private_ads">
 
     </div>
@@ -47,14 +56,14 @@ function get_kristal_private_ads_func( $atts ){
                     for (var item in data) { // "foreach"
                         var entry = data[ item ];
 
-                        html += '<div class = "block_entry">';
+                        html += '<div class = "block_entry"><a href="<?php echo $kristalHomeUrl; ?>' + entry[ 'link' ] + '">';
 
-                        html += '<div class = "id">' + entry[ 'id' ] + '</div>';
+                        /*html += '<div class = "id">' + entry[ 'id' ] + '</div>';*/
                         html += '<div class = "head">' + entry[ 'head' ] + '</div>';
                         html += '<div class = "text">' + entry[ 'text' ] + '</div>';
-                        html += '<div class = "link">' + entry[ 'link' ] + '</div>';
+                        /*html += '<div class = "link"><-?php echo $kristalHomeUrl; ?->' + entry[ 'link' ] + '</div>';*/
 
-                        html += '</div>';
+                        html += '</a></div>';
 
                         //console.log(entry);
                     }
