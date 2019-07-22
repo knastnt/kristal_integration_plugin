@@ -31,13 +31,37 @@ function get_kristal_private_ads_func( $atts ){
     }
 
     ?>
+    <div id="kristal_private_ads">
+
+    </div>
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
             // Запустим ajax-запрос, установим обработчики его выполнения и
             // сохраним объект jqxhr данного запроса для дальнейшего использования.
             var jqxhr = jQuery.getJSON("<?php echo $apiLink; ?>")
-                .success(function() { console.log("Успешное выполнение"); })
+                .success(function( data ) {
+
+                    var html = "";
+
+                    for (var item in data) { // "foreach"
+                        var entry = data[ item ];
+
+                        html += '<div class = "block_entry">';
+
+                        html += '<div class = "id">' + entry[ 'id' ] + '</div>';
+                        html += '<div class = "head">' + entry[ 'head' ] + '</div>';
+                        html += '<div class = "text">' + entry[ 'text' ] + '</div>';
+                        html += '<div class = "link">' + entry[ 'link' ] + '</div>';
+
+                        html += '</div>';
+
+                        //console.log(entry);
+                    }
+
+                    jQuery("#kristal_private_ads").html(html);
+                    //console.log("Успешное выполнение");
+                })
                 .error(function() { console.log("Ошибка выполнения. Возможно, Ваш запрос кроссдоменный - см. CORS и Access-Control-Allow-Origin"); })
                 .complete(function() { /*alert("Завершение выполнения");*/ });
 
