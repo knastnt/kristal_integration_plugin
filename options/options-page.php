@@ -7,7 +7,7 @@
  */
 add_action('admin_menu', 'add_plugin_page');
 function add_plugin_page(){
-	add_options_page( 'Кристалл интеграция. Настройки. Релиз 2019-07-22', 'Кристалл интеграция', 'manage_options', 'kristal_integration', 'kristall_options_page_output' );
+	add_options_page( 'Кристалл интеграция. Настройки. Релиз 2019-07-23', 'Кристалл интеграция', 'manage_options', 'kristal_integration', 'kristall_options_page_output' );
 }
 
 function kristall_options_page_output(){
