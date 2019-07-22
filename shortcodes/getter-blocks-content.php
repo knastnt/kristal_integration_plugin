@@ -1,15 +1,90 @@
 <?php
 
+function get_kristal_api_url()
+{
+    $kristall_options_array = get_option('kristall_options_array');
+    $apiLink = isset($kristall_options_array['kristall_api_url']) ? $kristall_options_array['kristall_api_url'] : 'https://www.kristal-online.ru/api/api.php';
+    return $apiLink;
+}
+
+function extract_domain_from_url( $url )
+{
+    $parsed_url = parse_url($url);
+    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+    return $scheme . $host . $port;
+}
+
+
 //Шорткоды заполнения блоков Торговая площадка, Вебинары, Частные объявления
 
-function get_kristal_trade_place_func(){
+function get_kristal_trade_place_func( $atts ){
 
+    //Адрес API кристала
+    $kristalApiUrl = get_kristal_api_url();
+
+    //Извлекаем адрес домена из адреса API
+    $kristalHomeUrl = extract_domain_from_url($kristalApiUrl);
+
+    //URL запроса
+    $requestUrl = $kristalApiUrl . '?data=getBirzaData';
+    if (isset($atts['count']) && intval($atts['count']) > 0) {
+        $requestUrl .= '&count=' . intval($atts['count']);
+    }
+
+    ?>
+
+    <div id="kristal_trade_place">
+
+    </div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+
+            //Проверяем есть ли блок id = kristal_trade_place
+            if( jQuery("#kristal_trade_place").length ) {
+
+                // Запустим ajax-запрос, установим обработчики его выполнения
+                jQuery.getJSON("<?php echo $requestUrl; ?>")
+                    .success(function (data) {
+
+                        var html = "";
+
+                        for (var item in data) {
+                            var entry = data[item];
+
+                            html += '<div class = "block_entry">';
+
+                            html += '<div class = "head">' + entry['startTime'] + '</div>';
+                            html += '<div class = "text">' + entry['uslName'] + '</div>';
+                            html += '<div class = "text">' + entry['description'] + '</div>';
+                            html += '<div class = "text">' + entry['status'] + '</div>';
+
+                            html += '</div>';
+
+                            console.log(entry);
+                        }
+
+                        jQuery("#kristal_trade_place").html(html);
+                        //console.log("Успешное выполнение");
+                    })
+                    .error(function () {
+                        console.log("Ошибка AJAX запроса элемента kristal_private_ads. Возможно, Ваш запрос кроссдоменный - гугли CORS и Access-Control-Allow-Origin");
+                    })
+                    .complete(function () { /*alert("Завершение выполнения");*/
+                    });
+            }
+
+        });
+    </script>
+    <?php
 
 }
 add_shortcode('kristal_trade_place', 'get_kristal_trade_place_func');
 
 
-function get_kristal_vebinars_func(){
+function get_kristal_vebinars_func( $atts ){
 
 
 }
@@ -17,64 +92,62 @@ add_shortcode('kristal_vebinars', 'get_kristal_vebinars_func');
 
 
 function get_kristal_private_ads_func( $atts ){
-    $kristall_options_array = get_option('kristall_options_array');
-    $apiLink = isset($kristall_options_array['kristall_api_url']) ? $kristall_options_array['kristall_api_url'] : 'https://www.kristal-online.ru/api/api.php';
 
-
-    $apiLink .= '?data=getObData';
-
-    if (isset($atts['count']) && intval($atts['count']) > 0) {
-        $apiLink .= '&count=' . intval($atts['count']);
-    }
-    if (isset($atts['type']) && strtolower($atts['type']) == 'all') {
-        $apiLink .= '&type=all';
-    }
-
+    //Адрес API кристала
+    $kristalApiUrl = get_kristal_api_url();
 
     //Извлекаем адрес домена из адреса API
-    $parsed_url = parse_url($apiLink);
-    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-    $kristalHomeUrl = $scheme . $host . $port;
+    $kristalHomeUrl = extract_domain_from_url($kristalApiUrl);
+
+    //URL запроса
+    $requestUrl = $kristalApiUrl . '?data=getObData';
+    if (isset($atts['count']) && intval($atts['count']) > 0) {
+        $requestUrl .= '&count=' . intval($atts['count']);
+    }
+    if (isset($atts['type']) && strtolower($atts['type']) == 'all') {
+        $requestUrl .= '&type=all';
+    }
 
     ?>
 
     <div id="kristal_private_ads">
 
     </div>
+
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
-            // Запустим ajax-запрос, установим обработчики его выполнения и
-            // сохраним объект jqxhr данного запроса для дальнейшего использования.
-            var jqxhr = jQuery.getJSON("<?php echo $apiLink; ?>")
-                .success(function( data ) {
+            //Проверяем есть ли блок id = kristal_private_ads
+            if( jQuery("#kristal_private_ads").length ) {
 
-                    var html = "";
+                // Запустим ajax-запрос, установим обработчики его выполнения
+                jQuery.getJSON("<?php echo $requestUrl; ?>")
+                    .success(function (data) {
 
-                    for (var item in data) { // "foreach"
-                        var entry = data[ item ];
+                        var html = "";
 
-                        html += '<div class = "block_entry"><a href="<?php echo $kristalHomeUrl; ?>' + entry[ 'link' ] + '">';
+                        for (var item in data) {
+                            var entry = data[item];
 
-                        /*html += '<div class = "id">' + entry[ 'id' ] + '</div>';*/
-                        html += '<div class = "head">' + entry[ 'head' ] + '</div>';
-                        html += '<div class = "text">' + entry[ 'text' ] + '</div>';
-                        /*html += '<div class = "link"><-?php echo $kristalHomeUrl; ?->' + entry[ 'link' ] + '</div>';*/
+                            html += '<div class = "block_entry"><a href="<?php echo $kristalHomeUrl; ?>' + entry['link'] + '">';
 
-                        html += '</a></div>';
+                            html += '<div class = "head">' + entry['head'] + '</div>';
+                            html += '<div class = "text">' + entry['text'] + '</div>';
 
-                        //console.log(entry);
-                    }
+                            html += '</a></div>';
 
-                    jQuery("#kristal_private_ads").html(html);
-                    //console.log("Успешное выполнение");
-                })
-                .error(function() { console.log("Ошибка выполнения. Возможно, Ваш запрос кроссдоменный - см. CORS и Access-Control-Allow-Origin"); })
-                .complete(function() { /*alert("Завершение выполнения");*/ });
+                            //console.log(entry);
+                        }
 
-
+                        jQuery("#kristal_private_ads").html(html);
+                        //console.log("Успешное выполнение");
+                    })
+                    .error(function () {
+                        console.log("Ошибка AJAX запроса элемента kristal_private_ads. Возможно, Ваш запрос кроссдоменный - гугли CORS и Access-Control-Allow-Origin");
+                    })
+                    .complete(function () { /*alert("Завершение выполнения");*/
+                    });
+            }
 
         });
     </script>
