@@ -78,6 +78,13 @@ function custom_checkout_question_field( $checkout ) {
         'class'           => array('custom-question-ogrn-field', 'form-row-wide'),
     ), $checkout->get_value( 'custom_question_text_ogrn' ) );
 
+    woocommerce_form_field( 'custom_question_text_patronymic', array(
+        'type'            => 'text',
+        'label'           => 'Отчество',
+        'required'        => true,
+        'class'           => array('custom-question-patronymic-field', 'form-row-wide'),
+    ), $checkout->get_value( 'custom_question_text_patronymic' ) );
+
     echo "</div>";
 
 }
@@ -171,6 +178,7 @@ if( !function_exists( 'custom_checkout_question_get_field_values' ) ) {
             'custom_question_text_p_inn'                => '',
             'custom_question_text_ogrnip'    => '',
             'custom_question_text_ogrn'    => '',
+            'custom_question_text_patronymic'    => '',
         ];
 
         foreach( $fields as $field_name => $value ) {
@@ -261,6 +269,9 @@ function custom_checkout_question_field_validate() {
     }
     ///////////////////////////////////////
 
+    if ( empty( $field_values['custom_question_text_patronymic'] ) ) {
+        wc_add_notice( 'Поле Отчество является обязательным полем.', 'error' );
+    }
 }
 
 add_action( 'woocommerce_checkout_process', 'custom_checkout_question_field_validate' );

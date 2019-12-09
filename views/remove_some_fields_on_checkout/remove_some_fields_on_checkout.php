@@ -18,7 +18,7 @@ function custom_override_checkout_fields( $fields ) {
 	unset($fields['billing']['billing_state']); //штат
 	//unset($fields['billing']['billing_phone']); //телефон
 	unset($fields['order']['order_comments']); //добавить комментарий
-	unset($fields['billing']['billing_email']); //email
+    //unset($fields['billing']['billing_email']); //email
 	//unset($fields['account']['account_username']); //логин
 	//unset($fields[‘account’][‘account_password’]); //пароль
 	//unset($fields['account']['account_password-2']); //подтверждение пароля
