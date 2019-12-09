@@ -78,18 +78,26 @@ function custom_checkout_question_field( $checkout ) {
         'class'           => array('custom-question-ogrn-field', 'form-row-wide'),
     ), $checkout->get_value( 'custom_question_text_ogrn' ) );
 
-    woocommerce_form_field( 'custom_question_text_patronymic', array(
-        'type'            => 'text',
-        'label'           => 'Отчество',
-        'required'        => true,
-        'class'           => array('custom-question-patronymic-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_patronymic' ) );
-
     echo "</div>";
 
 }
 
 add_action( 'woocommerce_before_checkout_billing_form', 'custom_checkout_question_field' );
+
+
+add_filter( 'woocommerce_checkout_fields','checkout_extra_fields');
+function checkout_extra_fields($fields){
+    $fields['billing']['billing_patronymic'] = array( //Добавляем поле Отчество
+        'label'       => 'Отчество',
+        'priority'        => 15,
+        'required'    => true,
+        'type'        => 'text',
+        'class'           => array('form-row-last'),
+    );
+    $fields['billing']['billing_last_name']['class'] =  array('form-row'); //Делаем поле Фамилия - широким
+
+    return $fields;
+}
 
 
 
@@ -178,7 +186,7 @@ if( !function_exists( 'custom_checkout_question_get_field_values' ) ) {
             'custom_question_text_p_inn'                => '',
             'custom_question_text_ogrnip'    => '',
             'custom_question_text_ogrn'    => '',
-            'custom_question_text_patronymic'    => '',
+            'billing_patronymic'    => '',
         ];
 
         foreach( $fields as $field_name => $value ) {
@@ -268,10 +276,6 @@ function custom_checkout_question_field_validate() {
 
     }
     ///////////////////////////////////////
-
-    if ( empty( $field_values['custom_question_text_patronymic'] ) ) {
-        wc_add_notice( 'Поле Отчество является обязательным полем.', 'error' );
-    }
 }
 
 add_action( 'woocommerce_checkout_process', 'custom_checkout_question_field_validate' );
@@ -307,6 +311,9 @@ if( !function_exists( 'custom_checkout_question_field_save' ) ) {
             $needs = array('custom_question_field'=>'', 'custom_question_text_p_naimenovanie'=>'', 'custom_question_text_p_inn'=>'', 'custom_question_text_ogrn'=>'');
 
         }
+
+        $needs['billing_patronymic'] = '';
+
         $field_values = array_intersect_key($field_values, $needs);
 
 
