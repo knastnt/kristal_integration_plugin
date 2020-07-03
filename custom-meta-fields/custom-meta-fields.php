@@ -112,18 +112,13 @@ function kristall_save_custom_field( $post_id ) {
      foreach (allow_client_types_paramNames as $key => $description) {
 
          //устанавливаем значения по умолчанию, если таковых ещё не имеется
-         if ($product->meta_exists($key)){
-             $paramValue = (int)(isset($_POST[$key]) && ($_POST[$key]=='yes' || $_POST[$key]==1));
-         }else{
-             $paramValue = $description[0];
-         }
+         $paramValue = (int)(isset($_POST[$key]) && ($_POST[$key]=='yes' || $_POST[$key]==1));
          $product->update_meta_data( $key, sanitize_text_field( $paramValue ) );
      }
 
 
 	 $product->save();
 }
-//add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );
-add_action( 'save_post_product', 'kristall_save_custom_field' );
+add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );
 
 
