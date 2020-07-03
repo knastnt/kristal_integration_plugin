@@ -22,7 +22,6 @@ function kristall_display_custom_field() {
 	 $customs_declaration = $product->get_meta( 'customs_declaration' );
 	 $unit = $product->get_meta( 'unit' );
 	 $single_in_cart = $product->get_meta( 'single_in_cart' );
-	 $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
 
 	 echo "<div class=\"kristall-custom-fields-wrapper\">";
 
@@ -58,12 +57,24 @@ function kristall_display_custom_field() {
 		 '<div class="kristall-custom-field-wrapper single_in_cart"><span>Не может быть приобретен с другими товарами</span></div>'
 		 );
 	 }
+     $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
 	 if( $only_for_fiz_lico ) {
 		 // Only display our field if we've got a value for the field only_for_fiz_lico
 		 print(
 		 '<div class="kristall-custom-field-wrapper only_for_fiz_lico"><span>Может быть приобретен только физическим лицом</span></div>'
 		 );
 	 }
+
+	 $allow_for_types = array();
+	 if ((int)$product->get_meta( 'allow_client_types_fiz' ) == 1) $allow_for_types[] = 'Физ. лицом';
+	 if ((int)$product->get_meta( 'allow_client_types_ip' ) == 1) $allow_for_types[] = 'ИП';
+	 if ((int)$product->get_meta( 'allow_client_types_yur' ) == 1) $allow_for_types[] = 'Юр. лицом';
+     if (count($allow_for_types) > 0 && count($allow_for_types) < 3) {
+        print(
+        '<div class="kristall-custom-field-wrapper only_for_fiz_lico"><span>Может быть приобретен только ' . implode(" и ", $allow_for_types) . '</span></div>'
+        );
+     }
+
 
     echo "</div>";
 }
