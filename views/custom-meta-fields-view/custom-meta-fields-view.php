@@ -57,13 +57,6 @@ function kristall_display_custom_field() {
 		 '<div class="kristall-custom-field-wrapper single_in_cart"><span>Не может быть приобретен с другими товарами</span></div>'
 		 );
 	 }
-     $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
-	 if( $only_for_fiz_lico ) {
-		 // Only display our field if we've got a value for the field only_for_fiz_lico
-		 print(
-		 '<div class="kristall-custom-field-wrapper only_for_fiz_lico"><span>Может быть приобретен только физическим лицом</span></div>'
-		 );
-	 }
 
 	 $allow_for_types = array();
 	 if ((int)$product->get_meta( 'allow_client_types_fiz' ) == 1) $allow_for_types[] = 'Физ. лицом';
