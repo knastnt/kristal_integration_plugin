@@ -4,6 +4,15 @@
 // https://wpruse.ru/woocommerce/custom-fields-in-products/
 
 
+// Метачекбокс, дефолтное значение и описание
+const allow_client_types_paramNames = array(
+    'single_in_cart' => [0, 'В корзине может быть только этот товар'],
+    'only_for_fiz_lico' => [0, 'Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)'],
+    'allow_client_types_fiz' => [1, 'Разрешить покупать физическим лицам'],
+    'allow_client_types_ip' => [1, 'Разрешить покупать индивидуальным предпринимателям'],
+    'allow_client_types_yur' => [1, 'Разрешить покупать юридическим лицам']
+);
+
  
 /**
  * Display the custom text fields
@@ -53,24 +62,24 @@ function kristall_create_custom_fields() {
 	 'class' => 'kristall-custom-field',
 	 );
 	 woocommerce_wp_text_input( $args );
-	  
-	 // В корзине может быть только этот товар
-	 $args = array(
-	 'id' => 'single_in_cart',
-	 'label' => __( 'В корзине может быть только этот товар', 'kristall' ),
-	 'class' => 'kristall-custom-checkbox',
-	 'value' => get_post_meta( $post->ID, 'single_in_cart', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'single_in_cart', true ),
-	 );
-	 woocommerce_wp_checkbox( $args );
 
-	 // Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)
-	 $args = array(
-	 'id' => 'only_for_fiz_lico',
-	 'label' => __( 'Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)', 'kristall' ),
-	 'class' => 'kristall-custom-checkbox',
-	 'value' => get_post_meta( $post->ID, 'only_for_fiz_lico', true ) == 1 ? 'yes' : get_post_meta( $post->ID, 'only_for_fiz_lico', true ),
-	 );
-	 woocommerce_wp_checkbox( $args );
+
+	 // Отрисовываем чекбоксы для метаполей.
+     // В корзине может быть только этот товар
+     // Только для физ.лиц. (нельзя покупать ЮРикам и ИПэшникам)
+     // Разрешать покупать ФИЗикам
+     // Разрешать покупать ИПшникам
+     // Разрешать покупать ЮРикам
+     foreach (allow_client_types_paramNames as $key => $description) {
+        $args = array(
+            'id' => $key,
+            'label' => __( $description[1], 'kristall' ),
+            'class' => 'kristall-custom-checkbox',
+            'value' => get_post_meta( $post->ID, $key, true ) == 1 ? 'yes' : get_post_meta( $post->ID, $key, true ),
+        );
+        woocommerce_wp_checkbox( $args );
+     }
+
  
 	echo '</div>';
 }
@@ -90,28 +99,31 @@ function kristall_save_custom_field( $post_id ) {
 	 $country = isset( $_POST['country'] ) ? $_POST['country'] : '';
 	 $customs_declaration = isset( $_POST['customs_declaration'] ) ? $_POST['customs_declaration'] : '';
 	 $unit = isset( $_POST['unit'] ) ? $_POST['unit'] : '';
-	 $single_in_cart = isset( $_POST['single_in_cart'] ) ? $_POST['single_in_cart'] : '';
-	 if ($single_in_cart == 'yes' || $single_in_cart == 1){
-		 $single_in_cart = 1;
-	 }else{
-		 $single_in_cart = 0;
-	 }
-	 $only_for_fiz_lico = isset( $_POST['only_for_fiz_lico'] ) ? $_POST['only_for_fiz_lico'] : '';
-	 if ($only_for_fiz_lico == 'yes' || $only_for_fiz_lico == 1){
-         $only_for_fiz_lico = 1;
-	 }else{
-         $only_for_fiz_lico = 0;
-	 }
-	 
-	 $product->update_meta_data( 'is_service', sanitize_text_field( $is_service ) );
-	 $product->update_meta_data( 'country', sanitize_text_field( $country ) );
-	 $product->update_meta_data( 'customs_declaration', sanitize_text_field( $customs_declaration ) );
-	 $product->update_meta_data( 'unit', sanitize_text_field( $unit ) );
-	 $product->update_meta_data( 'single_in_cart', sanitize_text_field( $single_in_cart ) );
-	 $product->update_meta_data( 'only_for_fiz_lico', sanitize_text_field( $only_for_fiz_lico ) );
+
+     $product->update_meta_data( 'is_service', sanitize_text_field( $is_service ) );
+     $product->update_meta_data( 'country', sanitize_text_field( $country ) );
+     $product->update_meta_data( 'customs_declaration', sanitize_text_field( $customs_declaration ) );
+     $product->update_meta_data( 'unit', sanitize_text_field( $unit ) );
+
+
+
+
+	 //Устанавливаем значения метаполей при сохранении товара
+     foreach (allow_client_types_paramNames as $key => $description) {
+
+         //устанавливаем значения по умолчанию, если таковых ещё не имеется
+         if ($product->meta_exists($key)){
+             $paramValue = (int)(isset($_POST[$key]) && ($_POST[$key]=='yes' || $_POST[$key]==1));
+         }else{
+             $paramValue = $description[0];
+         }
+         $product->update_meta_data( $key, sanitize_text_field( $paramValue ) );
+     }
+
 
 	 $product->save();
 }
-add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );
+//add_action( 'woocommerce_process_product_meta', 'kristall_save_custom_field' );
+add_action( 'save_post_product', 'kristall_save_custom_field' );
 
 
