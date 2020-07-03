@@ -17,66 +17,85 @@ function custom_checkout_question_field( $checkout ) {
 
     //echo sprintf( '<p>%s</p>', __( "Выберите: Физ.лицо или Организация" ) );
 
-    /* Если в карзине товар $only_for_fiz_lico, то убираем ИП и Юр.*/
+    /* Отлавливаем ограничения allow_client_types и убираем тех кому покупать запрещено Физ, ИП или Юр.*/
     global $woocommerce;
-    $only_for_fiz_lico = false;
+
+
+
+    $cart_allow_client_types_fiz = 1;
+    $cart_allow_client_types_ip = 1;
+    $cart_allow_client_types_yur = 1;
+
     foreach( $woocommerce->cart->get_cart() as $cart_item ){
         $product_id = $cart_item['product_id'];
         $product = wc_get_product( $product_id );
-        $only_for_fiz_lico = $product->get_meta( 'only_for_fiz_lico' );
-    }
-    if( $only_for_fiz_lico ) {
-        woocommerce_form_field( 'custom_question_field', array(
-            'type'            => 'radio',
-            'required'        => true,
-            'class'           => array('custom-question-field', 'form-row-wide'),
-            'options'         => array(
-                'fiz_lico'         => 'Физ.лицо',
-            ),
-            'default'         => 'fiz_lico',
-        ), $checkout->get_value( 'custom_question_field' ) );
-    }else{
-        woocommerce_form_field( 'custom_question_field', array(
-            'type'            => 'radio',
-            'required'        => true,
-            'class'           => array('custom-question-field', 'form-row-wide'),
-            'options'         => array(
-                'fiz_lico'         => 'Физ.лицо',
-                'individ_predprin'    => 'ИП',
-                'yur_lico'    => 'Юр.Лицо',
-            ),
-            'default'         => 'fiz_lico',
-        ), $checkout->get_value( 'custom_question_field' ) );
+
+
+        $allow_client_types_fiz = (int)$product->get_meta( 'allow_client_types_fiz' );
+        $allow_client_types_ip = (int)$product->get_meta( 'allow_client_types_ip' );
+        $allow_client_types_yur = (int)$product->get_meta( 'allow_client_types_yur' );
+        if ($allow_client_types_fiz + $allow_client_types_ip + $allow_client_types_yur > 0) {
+            $cart_allow_client_types_fiz *= $allow_client_types_fiz;
+            $cart_allow_client_types_ip *= $allow_client_types_ip;
+            $cart_allow_client_types_yur *= $allow_client_types_yur;
+        }
+
     }
 
+    $options = array(
+        'fiz_lico'         => 'Физ.лицо',
+        'individ_predprin'    => 'ИП',
+        'yur_lico'    => 'Юр.Лицо'
+    );
+    if ($cart_allow_client_types_fiz == 0) unset($options['fiz_lico']);
+    if ($cart_allow_client_types_ip == 0) unset($options['individ_predprin']);
+    if ($cart_allow_client_types_yur == 0) unset($options['yur_lico']);
 
-    woocommerce_form_field( 'custom_question_text_p_naimenovanie', array(
-        'type'            => 'text',
-        'label'           => 'Наименование организации',
-        'required'        => true,
-        'class'           => array('custom-question-p-naimenovanie-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_p_naimenovanie' ) );
 
-    woocommerce_form_field( 'custom_question_text_p_inn', array(
-        'type'            => 'text',
-        'label'           => 'ИНН',
-        'required'        => true,
-        'class'           => array('custom-question-p-inn-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_p_inn' ) );
 
-    woocommerce_form_field( 'custom_question_text_ogrnip', array(
-        'type'            => 'text',
-        'label'           => 'ОГРНИП',
-        'required'        => true,
-        'class'           => array('custom-question-ogrnip-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_ogrnip' ) );
+    if(count($options)==0) {
+        print(
+            '<div class="kristall-custom-field-wrapper woocommerce-error"><span>В вашей корзине находятся тованы предназначенные для разнах клиентов. Одновременная покупка невозможна.</span></div>'
+        );
+    }else {
+        woocommerce_form_field('custom_question_field', array(
+            'type' => 'radio',
+            'required' => true,
+            'class' => array('custom-question-field', 'form-row-wide'),
+            'options' => $options,
+            'default' => array_keys($options)[0],
+        ), $checkout->get_value('custom_question_field'));
 
-    woocommerce_form_field( 'custom_question_text_ogrn', array(
-        'type'            => 'text',
-        'label'           => 'ОГРН',
-        'required'        => true,
-        'class'           => array('custom-question-ogrn-field', 'form-row-wide'),
-    ), $checkout->get_value( 'custom_question_text_ogrn' ) );
+        woocommerce_form_field( 'custom_question_text_p_naimenovanie', array(
+            'type'            => 'text',
+            'label'           => 'Наименование организации',
+            'required'        => true,
+            'class'           => array('custom-question-p-naimenovanie-field', 'form-row-wide'),
+        ), $checkout->get_value( 'custom_question_text_p_naimenovanie' ) );
+
+        woocommerce_form_field( 'custom_question_text_p_inn', array(
+            'type'            => 'text',
+            'label'           => 'ИНН',
+            'required'        => true,
+            'class'           => array('custom-question-p-inn-field', 'form-row-wide'),
+        ), $checkout->get_value( 'custom_question_text_p_inn' ) );
+
+        woocommerce_form_field( 'custom_question_text_ogrnip', array(
+            'type'            => 'text',
+            'label'           => 'ОГРНИП',
+            'required'        => true,
+            'class'           => array('custom-question-ogrnip-field', 'form-row-wide'),
+        ), $checkout->get_value( 'custom_question_text_ogrnip' ) );
+
+        woocommerce_form_field( 'custom_question_text_ogrn', array(
+            'type'            => 'text',
+            'label'           => 'ОГРН',
+            'required'        => true,
+            'class'           => array('custom-question-ogrn-field', 'form-row-wide'),
+        ), $checkout->get_value( 'custom_question_text_ogrn' ) );
+    }
+
+
 
     echo "</div>";
 
