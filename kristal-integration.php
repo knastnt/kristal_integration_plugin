@@ -3,7 +3,7 @@
  * Plugin Name: Кристалл интеграция
  * Description: Дополнение к woocommerce, позволяющее осуществлять продажу Ваших услуг из личного кабинера Кристалл
  * Plugin URI:  po365.ru
- * Version:     0.1
+ * Version:     2020.07.05
  */
  
  
@@ -43,3 +43,44 @@ require_once( plugin_dir_path(__FILE__ ) . '/shortcodes/orders-history.php' );
 
 //Шорткоды заполнения блоков Торговая площадка, Вебинары, Частные объявления
 require_once( plugin_dir_path(__FILE__ ) . '/shortcodes/getter-blocks-content.php' );
+
+
+
+//Функция вызываемая при активации плагина в Wordpress
+register_activation_hook( __FILE__, function(){
+
+    //Получаем все товары и для тех у кого only_for_fiz_lico, устанавливаем соответствующие allow_client_types_...
+    $args = array(
+        'post_type'      => 'product'
+    );
+
+    $loop = new WP_Query( $args );
+
+    while ( $loop->have_posts() ) {
+        $loop->the_post();
+        global $product;
+        $is_only_for_fiz_lico = (bool)$product->get_meta( 'only_for_fiz_lico' );
+
+
+        if ($is_only_for_fiz_lico) {
+            //не работает ни так, ни так. Странно, ну да ладно
+//            $product->update_meta_data( 'allow_client_types_fiz', 1 );
+//            $product->update_meta_data( 'allow_client_types_ip', 0 );
+//            $product->update_meta_data( 'allow_client_types_yur', 0 );
+//            $product->set_meta_data(array(
+//                'allow_client_types_fiz'=>1,
+//                'allow_client_types_ip'=>0,
+//                'allow_client_types_yur'=>0
+//                ));
+            //Вот так - работает
+            update_post_meta( $product->get_id(), 'allow_client_types_fiz', 1 );
+            update_post_meta( $product->get_id(), 'allow_client_types_ip', 0 );
+            update_post_meta( $product->get_id(), 'allow_client_types_yur', 0 );
+        }
+
+
+    }
+
+//    wp_reset_query();
+
+} );
